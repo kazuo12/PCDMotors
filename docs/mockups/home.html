@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>PCD Motors — Home</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .hero {
+    background: radial-gradient(120% 160% at 15% 0%, #1c5cff 0%, #123a94 45%, #0c2358 100%);
+    padding: 64px 60px 90px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content:"";
+    position:absolute; right:-80px; top:-60px;
+    width:420px; height:420px; border-radius:50%;
+    background: radial-gradient(circle, rgba(10,171,143,.35), transparent 70%);
+  }
+  .hero-inner { max-width: 760px; position: relative; z-index:2; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(10,171,143,.18); border:1px solid rgba(10,171,143,.5);
+    color:#5be8cd; font-weight:700; font-size:12.5px;
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1 { font-size: 44px; line-height:1.15; font-weight:800; margin-bottom:16px; }
+  .hero h1 span { color: #5be8cd; }
+  .hero p.lead { font-size: 17px; color:#c9d6f5; max-width:560px; margin-bottom:34px; line-height:1.6; }
+
+  .searchbox {
+    background:#fff; border-radius: 14px; padding: 18px;
+    display:flex; gap:12px; box-shadow: 0 20px 50px rgba(8,20,50,.35);
+    position: relative; z-index:2; max-width: 900px;
+  }
+  .field { flex:1; display:flex; flex-direction:column; gap:4px; padding: 4px 14px; border-right:1px solid var(--border); }
+  .field:last-of-type { border-right:none; }
+  .field label { font-size:11px; font-weight:700; color: var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
+  .field .val { font-size:14.5px; font-weight:600; color: var(--navy); display:flex; align-items:center; justify-content:space-between; gap:6px;}
+  .searchbox .btn-primary { align-self:center; padding:14px 26px; border-radius:10px; }
+
+  .stats { display:flex; gap:56px; margin-top: 42px; position:relative; z-index:2; }
+  .stats .stat b { font-size:26px; display:block; }
+  .stats .stat span { font-size:12.5px; color:#a9bce8; }
+
+  section { padding: 56px 60px; }
+  .section-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; }
+  .section-head h2 { font-size: 26px; color: var(--navy); }
+  .section-head p { color: var(--text-muted); font-size:14.5px; margin-top:6px; }
+  .link-more { color: var(--blue); font-weight:700; font-size:14px; display:flex; align-items:center; gap:6px; }
+
+  .cat-grid { display:grid; grid-template-columns: repeat(6,1fr); gap:16px; }
+  .cat-card {
+    background:#fff; border:1px solid var(--border); border-radius:12px;
+    padding: 20px 14px; text-align:center; transition:.2s;
+  }
+  .cat-card .icon-wrap {
+    width:52px; height:52px; border-radius:12px; margin:0 auto 12px;
+    background: #eaf1ff; display:flex; align-items:center; justify-content:center;
+    color: var(--blue);
+  }
+  .cat-card p { font-size:13px; font-weight:700; color: var(--navy); line-height:1.3; }
+
+  .veh-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:22px; }
+  .veh-card { background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  .veh-photo { height:150px; position:relative;
+    background: linear-gradient(135deg,#dbe6fb,#eef3ff);
+    display:flex; align-items:center; justify-content:center; color:#9fb3e0;
+  }
+  .veh-photo .badge {
+    position:absolute; top:10px; left:10px;
+    background: var(--teal); color:#fff; font-size:10.5px; font-weight:800;
+    padding: 4px 9px; border-radius:6px; letter-spacing:.3px;
+  }
+  .veh-photo .fav { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.9); display:flex; align-items:center; justify-content:center; }
+  .veh-body { padding: 16px; }
+  .veh-body h3 { font-size:15.5px; color:var(--navy); margin-bottom:6px; }
+  .veh-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .veh-tags span { background:#eef1f7; color:#3a4457; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:5px; }
+  .veh-meta { display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--text-muted); margin-bottom:10px; }
+  .veh-price { font-size:19px; font-weight:800; color: var(--navy); }
+  .veh-price small { font-size:11px; font-weight:600; color:var(--text-muted); display:block; }
+
+  .how { display:grid; grid-template-columns: repeat(3,1fr); gap:26px; }
+  .how-step { background:#fff; border:1px solid var(--border); border-radius:14px; padding:26px; }
+  .how-step .num {
+    width:36px; height:36px; border-radius:50%; background: var(--navy); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; margin-bottom:16px;
+  }
+  .how-step h3 { font-size:16px; color:var(--navy); margin-bottom:8px; }
+  .how-step p { font-size:13.5px; color:var(--text-muted); line-height:1.6; }
+
+  .cta-banner {
+    margin: 20px 60px 0; border-radius:18px; padding: 40px 48px;
+    background: linear-gradient(120deg, #0aab8f, #0c8a72);
+    display:flex; justify-content:space-between; align-items:center; color:#fff;
+  }
+  .cta-banner h3 { font-size:22px; margin-bottom:8px; }
+  .cta-banner p { font-size:14px; color:#d3f5ec; max-width:480px; }
+  .cta-banner .btn { background:#fff; color:#0c8a72; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><span class="tag">PI</span>Projeto Integrador II — Tecnologia para Mobilidade Inclusiva</div>
+  <div>Central de Ajuda&nbsp;&nbsp;•&nbsp;&nbsp;Anuncie seu veículo</div>
+</div>
+
+<header class="main">
+  <div class="logo">
+    <div class="mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+    </div>
+    <div>PCD Motors<small>MOBILIDADE SEM BARREIRAS</small></div>
+  </div>
+  <nav class="mainnav">
+    <a href="#" class="active">Comprar</a>
+    <a href="#">Anunciar</a>
+    <a href="#">Oficinas Parceiras</a>
+    <a href="#">Como Funciona</a>
+  </nav>
+  <div class="header-actions">
+    <a class="btn btn-ghost">Entrar</a>
+    <a class="btn btn-primary">+ Anunciar grátis</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">♿ &nbsp;Marketplace especializado em veículos adaptados</div>
+    <h1>Encontre o carro adaptado ideal <span>para a sua autonomia.</span></h1>
+    <p class="lead">O primeiro marketplace do Brasil dedicado exclusivamente à compra e venda de veículos já adaptados para PcD — com filtros por tipo de adaptação e verificação de laudo técnico.</p>
+  </div>
+
+  <div class="searchbox">
+    <div class="field">
+      <label>Tipo de adaptação</label>
+      <div class="val">Comando manual freio/acelerador <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+    <div class="field">
+      <label>Localização</label>
+      <div class="val">Itapetininga - SP <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+    <div class="field">
+      <label>Marca / Modelo</label>
+      <div class="val">Todas as marcas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+    <button class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      Buscar
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>320+</b><span>veículos adaptados ativos</span></div>
+    <div class="stat"><b>48</b><span>oficinas parceiras verificadas</span></div>
+    <div class="stat"><b>100%</b><span>anúncios com laudo conferido</span></div>
+  </div>
+</div>
+
+<section>
+  <div class="section-head">
+    <div>
+      <h2>Busque por tipo de adaptação</h2>
+      <p>Filtros especializados que sites tradicionais não oferecem.</p>
+    </div>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></div><p>Comando de freio e acelerador manual</p></div>
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M12 19v3M8 22h8"/></svg></div><p>Adaptação de embreagem</p></div>
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2.5"/><path d="M7 21l3-8 2-3 2 3 3 8M9 13H6M18 13h-3"/></svg></div><p>Elevador para cadeira de rodas</p></div>
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></div><p>Direção assistida / hidráulica</p></div>
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 6V4h10v2M12 10v4M9 12h6"/></svg></div><p>Transferência automática</p></div>
+    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17h16M6 17V9a2 2 0 0 1 2-2h2M14 17V5a2 2 0 0 1 2-2h2"/></svg></div><p>Estruturas p/ transporte de próteses</p></div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <h2>Veículos em destaque</h2>
+      <p>Anúncios verificados com laudo técnico de adaptação.</p>
+    </div>
+    <div class="link-more">Ver todos os veículos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1c5cff" stroke-width="3"><path d="M9 6l6 6-6 6"/></svg></div>
+  </div>
+  <div class="veh-grid">
+
+    <div class="veh-card">
+      <div class="veh-photo">
+        <span class="badge">✓ Laudo verificado</span>
+        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="veh-body">
+        <h3>Fiat Doblô Adventure 1.8</h3>
+        <div class="veh-tags"><span>♿ Comando manual</span><span>Automático</span></div>
+        <div class="veh-meta"><span>2021 • 38.200 km</span><span>Itapetininga-SP</span></div>
+        <div class="veh-price">R$ 98.900<small>Vendedor particular</small></div>
+      </div>
+    </div>
+
+    <div class="veh-card">
+      <div class="veh-photo">
+        <span class="badge">✓ Laudo verificado</span>
+        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="veh-body">
+        <h3>Chevrolet Spin LTZ 1.8</h3>
+        <div class="veh-tags"><span>♿ Elevador de cadeira</span><span>Automático</span></div>
+        <div class="veh-meta"><span>2020 • 51.400 km</span><span>Sorocaba-SP</span></div>
+        <div class="veh-price">R$ 84.500<small>Concessionária</small></div>
+      </div>
+    </div>
+
+    <div class="veh-card">
+      <div class="veh-photo">
+        <span class="badge">✓ Laudo verificado</span>
+        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="veh-body">
+        <h3>VW Voyage 1.6 Adaptado</h3>
+        <div class="veh-tags"><span>♿ Comando manual</span><span>Manual</span></div>
+        <div class="veh-meta"><span>2019 • 62.000 km</span><span>Itapetininga-SP</span></div>
+        <div class="veh-price">R$ 62.300<small>Vendedor particular</small></div>
+      </div>
+    </div>
+
+    <div class="veh-card">
+      <div class="veh-photo">
+        <span class="badge">✓ Laudo verificado</span>
+        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="veh-body">
+        <h3>Renault Duster Oroch</h3>
+        <div class="veh-tags"><span>♿ Direção assistida</span><span>Automático</span></div>
+        <div class="veh-meta"><span>2022 • 21.900 km</span><span>Tatuí-SP</span></div>
+        <div class="veh-price">R$ 121.400<small>Concessionária</small></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <h2>Como funciona</h2>
+      <p>Simples, transparente e feito para reduzir o tempo de busca.</p>
+    </div>
+  </div>
+  <div class="how">
+    <div class="how-step">
+      <div class="num">1</div>
+      <h3>Filtre pela adaptação que você precisa</h3>
+      <p>Busque por tipo de comando, categoria de CNH e localização — sem perder tempo com anúncios incompatíveis.</p>
+    </div>
+    <div class="how-step">
+      <div class="num">2</div>
+      <h3>Confira o laudo técnico verificado</h3>
+      <p>Cada anúncio traz os detalhes da adaptação e a oficina responsável pela instalação.</p>
+    </div>
+    <div class="how-step">
+      <div class="num">3</div>
+      <h3>Fale direto com o vendedor</h3>
+      <p>Envie mensagem ou chame no WhatsApp e negocie diretamente, sem intermediários.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div>
+    <h3>É oficina especializada, despachante ou concessionária?</h3>
+    <p>Cadastre-se como parceiro verificado e ganhe visibilidade junto ao público PcD.</p>
+  </div>
+  <a class="btn">Quero ser parceiro</a>
+</div>
+
+<footer>
+  <div class="cols">
+    <div>
+      <h4>PCD Motors</h4>
+      <p>Marketplace exclusivo para compra e venda de veículos já adaptados para pessoas com deficiência. Projeto Integrador II — Mobilidade Inclusiva.</p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul><li>Comprar veículos</li><li>Anunciar veículo</li><li>Oficinas parceiras</li><li>Como funciona</li></ul>
+    </div>
+    <div>
+      <h4>Suporte</h4>
+      <ul><li>Central de ajuda</li><li>Segurança na negociação</li><li>Fale conosco</li></ul>
+    </div>
+    <div>
+      <h4>Projeto</h4>
+      <ul><li>Sobre o Plano de Ação</li><li>Stakeholders</li><li>Equipe</li></ul>
+    </div>
+  </div>
+  <div class="bottom">
+    <span>© 2026 PCD Motors — Projeto Integrador II</span>
+    <span>Protótipo acadêmico, não comercial</span>
+  </div>
+</footer>
+
+</body>
+</html>
