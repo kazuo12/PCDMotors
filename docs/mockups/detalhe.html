@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>PCD Motors — Detalhe do veículo</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .breadcrumb { padding: 18px 60px 0; font-size:13px; color:var(--text-muted); }
+  .breadcrumb b { color: var(--navy); }
+
+  .layout { display:grid; grid-template-columns: 1.65fr 1fr; gap:30px; padding: 20px 60px 10px; }
+
+  .gallery-main {
+    height: 380px; border-radius:16px;
+    background: linear-gradient(135deg,#dbe6fb,#eef3ff);
+    display:flex; align-items:center; justify-content:center; color:#9fb3e0;
+    position:relative; margin-bottom:12px;
+  }
+  .gallery-main .badge { position:absolute; top:16px; left:16px; background:var(--teal); color:#fff; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:7px; }
+  .gallery-thumbs { display:grid; grid-template-columns: repeat(5,1fr); gap:10px; }
+  .gallery-thumbs div { height:70px; border-radius:9px; background:linear-gradient(135deg,#e5edfc,#f3f6ff); display:flex; align-items:center; justify-content:center; color:#b6c5ea; }
+  .gallery-thumbs div.on { outline: 2.5px solid var(--blue); outline-offset:2px; }
+
+  .infoblock { background:#fff; border:1px solid var(--border); border-radius:16px; padding:26px; height:fit-content; }
+  .infoblock h1 { font-size:22px; color:var(--navy); margin-bottom:8px; }
+  .locrow { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); margin-bottom:18px; }
+  .price-big { font-size:30px; font-weight:800; color:var(--navy); }
+  .price-big small { display:block; font-size:12px; font-weight:600; color:var(--text-muted); margin-top:2px; }
+  .verified-strip { display:flex; align-items:center; gap:10px; background:#e8f9f4; color:#0c8a72; font-weight:700; font-size:13px; padding:12px 14px; border-radius:10px; margin:18px 0; }
+  .cta-col { display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .cta-col .btn { justify-content:center; padding:13px; font-size:14.5px; }
+  .btn-whats { background:#0aab8f; color:#fff; }
+  .seller-mini { display:flex; align-items:center; gap:12px; margin-top:20px; padding-top:20px; border-top:1px solid var(--border); }
+  .seller-mini .avatar { width:44px; height:44px; border-radius:50%; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; }
+  .seller-mini b { font-size:14px; color:var(--navy); display:block; }
+  .seller-mini span { font-size:12px; color:var(--text-muted); }
+
+  .lower { display:grid; grid-template-columns: 1.65fr 1fr; gap:30px; padding: 30px 60px 60px; }
+  .panel { background:#fff; border:1px solid var(--border); border-radius:16px; padding:26px; margin-bottom:24px; }
+  .panel h2 { font-size:17px; color:var(--navy); margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+  .spec-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:18px 24px; }
+  .spec-grid div span { display:block; font-size:11.5px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:.3px; margin-bottom:4px; }
+  .spec-grid div b { font-size:14.5px; color:var(--navy); }
+
+  .adapt-panel { background: linear-gradient(120deg,#0c2358,#123a94); color:#fff; border:none; }
+  .adapt-panel h2 { color:#fff; }
+  .adapt-row { display:flex; justify-content:space-between; padding: 11px 0; border-bottom:1px solid rgba(255,255,255,.14); font-size:13.5px; }
+  .adapt-row:last-child { border-bottom:none; }
+  .adapt-row span.k { color:#a9bce8; }
+  .adapt-row span.v { font-weight:700; }
+  .laudo-btn { margin-top:16px; width:100%; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3); color:#fff; padding:11px; border-radius:9px; font-weight:700; font-size:13px; }
+
+  .oficinas { display:flex; flex-direction:column; gap:12px; }
+  .of-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--border); border-radius:10px; }
+  .of-card b { font-size:13.5px; color:var(--navy); display:block; }
+  .of-card span { font-size:12px; color:var(--text-muted); }
+  .of-card .dist { font-size:12px; font-weight:700; color:var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><span class="tag">PI</span>Projeto Integrador II — Tecnologia para Mobilidade Inclusiva</div>
+  <div>Central de Ajuda&nbsp;&nbsp;•&nbsp;&nbsp;Anuncie seu veículo</div>
+</div>
+
+<header class="main">
+  <div class="logo">
+    <div class="mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+    </div>
+    <div>PCD Motors<small>MOBILIDADE SEM BARREIRAS</small></div>
+  </div>
+  <nav class="mainnav">
+    <a href="#" class="active">Comprar</a>
+    <a href="#">Anunciar</a>
+    <a href="#">Oficinas Parceiras</a>
+    <a href="#">Como Funciona</a>
+  </nav>
+  <div class="header-actions">
+    <a class="btn btn-ghost">Entrar</a>
+    <a class="btn btn-primary">+ Anunciar grátis</a>
+  </div>
+</header>
+
+<div class="breadcrumb">Início / Veículos adaptados / <b>Fiat Doblô Adventure 1.8</b></div>
+
+<div class="layout">
+  <div>
+    <div class="gallery-main">
+      <span class="badge">✓ Laudo técnico verificado</span>
+      <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+    </div>
+    <div class="gallery-thumbs">
+      <div class="on"></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <div class="infoblock">
+    <h1>Fiat Doblô Adventure 1.8 16V</h1>
+    <div class="locrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Itapetininga - SP · anunciado há 3 dias
+    </div>
+    <div class="price-big">R$ 98.900<small>Aceita financiamento e troca</small></div>
+
+    <div class="verified-strip">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0c8a72" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      Adaptação conferida por oficina parceira
+    </div>
+
+    <div class="cta-col">
+      <a class="btn btn-whats">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+        Chamar no WhatsApp
+      </a>
+      <a class="btn btn-primary">Enviar mensagem</a>
+      <a class="btn btn-outline">Ligar para o vendedor</a>
+    </div>
+
+    <div class="seller-mini">
+      <div class="avatar">RM</div>
+      <div>
+        <b>Roberto Martins</b>
+        <span>Vendedor particular · membro desde 2023</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lower">
+  <div>
+    <div class="panel">
+      <h2>Especificações do veículo</h2>
+      <div class="spec-grid">
+        <div><span>Marca</span><b>Fiat</b></div>
+        <div><span>Modelo</span><b>Doblô Adventure 1.8</b></div>
+        <div><span>Ano</span><b>2021/2021</b></div>
+        <div><span>Km rodados</span><b>38.200 km</b></div>
+        <div><span>Câmbio</span><b>Automático</b></div>
+        <div><span>Combustível</span><b>Flex</b></div>
+        <div><span>Cor</span><b>Prata</b></div>
+        <div><span>Portas</span><b>4</b></div>
+        <div><span>Categoria CNH</span><b>B (adaptado)</b></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Sobre o anúncio</h2>
+      <p style="font-size:13.5px; color:var(--text-muted); line-height:1.7;">
+        Veículo único dono, revisões em dia, adaptado por oficina especializada com certificação do Detran-SP.
+        Ideal para condutores com necessidade de comando manual de freio e acelerador. Documentação e laudo
+        de adaptação disponíveis para conferência antes da negociação.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel adapt-panel">
+      <h2>♿ Detalhes da adaptação</h2>
+      <div class="adapt-row"><span class="k">Tipo</span><span class="v">Comando manual freio/acelerador</span></div>
+      <div class="adapt-row"><span class="k">Instalado em</span><span class="v">03/2021</span></div>
+      <div class="adapt-row"><span class="k">Oficina responsável</span><span class="v">AutoAdapt Itapetininga</span></div>
+      <div class="adapt-row"><span class="k">Certificação</span><span class="v">Laudo Detran-SP nº 44.921</span></div>
+      <div class="adapt-row"><span class="k">Status</span><span class="v">✓ Verificado pela plataforma</span></div>
+      <button class="laudo-btn">Baixar laudo técnico (PDF)</button>
+    </div>
+
+    <div class="panel">
+      <h2>Oficinas parceiras próximas</h2>
+      <div class="oficinas">
+        <div class="of-card">
+          <div><b>AutoAdapt Itapetininga</b><span>Manutenção de comandos manuais</span></div>
+          <div class="dist">2,4 km</div>
+        </div>
+        <div class="of-card">
+          <div><b>Mobilidade Total SP</b><span>Elevadores e transferência</span></div>
+          <div class="dist">14 km</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="cols">
+    <div>
+      <h4>PCD Motors</h4>
+      <p>Marketplace exclusivo para compra e venda de veículos já adaptados para pessoas com deficiência. Projeto Integrador II — Mobilidade Inclusiva.</p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul><li>Comprar veículos</li><li>Anunciar veículo</li><li>Oficinas parceiras</li><li>Como funciona</li></ul>
+    </div>
+    <div>
+      <h4>Suporte</h4>
+      <ul><li>Central de ajuda</li><li>Segurança na negociação</li><li>Fale conosco</li></ul>
+    </div>
+    <div>
+      <h4>Projeto</h4>
+      <ul><li>Sobre o Plano de Ação</li><li>Stakeholders</li><li>Equipe</li></ul>
+    </div>
+  </div>
+  <div class="bottom">
+    <span>© 2026 PCD Motors — Projeto Integrador II</span>
+    <span>Protótipo acadêmico, não comercial</span>
+  </div>
+</footer>
+
+</body>
+</html>
