@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>PCD Motors — Busca</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .breadcrumb { padding: 18px 60px 0; font-size:13px; color:var(--text-muted); }
+  .breadcrumb b { color: var(--navy); }
+  .page-head { padding: 10px 60px 22px; display:flex; justify-content:space-between; align-items:center; }
+  .page-head h1 { font-size:24px; color:var(--navy); }
+  .page-head p { color:var(--text-muted); font-size:13.5px; margin-top:4px; }
+  .sort { display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--navy); font-weight:600; }
+  .sort .box { border:1px solid var(--border); background:#fff; padding:9px 14px; border-radius:8px; display:flex; align-items:center; gap:8px; }
+
+  .layout { display:grid; grid-template-columns: 280px 1fr; gap:28px; padding: 0 60px 60px; }
+
+  .filters { background:#fff; border:1px solid var(--border); border-radius:14px; padding:22px; align-self:start; }
+  .filters h2 { font-size:15px; color:var(--navy); margin-bottom:18px; }
+  .fgroup { margin-bottom:22px; }
+  .fgroup h3 { font-size:12px; text-transform:uppercase; letter-spacing:.4px; color:var(--text-muted); margin-bottom:10px; font-weight:700; }
+  .chk { display:flex; align-items:center; gap:9px; font-size:13.5px; color:var(--navy); margin-bottom:10px; }
+  .chk .box { width:16px; height:16px; border-radius:4px; border:1.5px solid #c3cbdb; flex-shrink:0; }
+  .chk.on .box { background: var(--blue); border-color:var(--blue); position:relative; }
+  .chk span.count { margin-left:auto; color:var(--text-muted); font-size:12px; font-weight:600; }
+  .range-track { height:5px; background:#e6eaf2; border-radius:3px; position:relative; margin:14px 4px 8px; }
+  .range-track .fill { position:absolute; left:20%; right:35%; top:0; bottom:0; background:var(--blue); border-radius:3px; }
+  .range-track .knob { width:15px; height:15px; background:#fff; border:3px solid var(--blue); border-radius:50%; position:absolute; top:-5px; }
+  .range-vals { display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); font-weight:600; }
+  .btn-clear { width:100%; padding:10px; border-radius:8px; border:1.5px solid var(--border); background:#fff; color:var(--navy); font-weight:700; font-size:13px; margin-top:6px; }
+
+  .results { display:flex; flex-direction:column; gap:16px; }
+  .rcard { background:#fff; border:1px solid var(--border); border-radius:14px; display:flex; overflow:hidden; }
+  .rphoto { width:230px; flex-shrink:0; background: linear-gradient(135deg,#dbe6fb,#eef3ff); display:flex; align-items:center; justify-content:center; color:#9fb3e0; position:relative; }
+  .rphoto .badge { position:absolute; top:12px; left:12px; background: var(--teal); color:#fff; font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:6px; }
+  .rbody { flex:1; padding: 20px 22px; display:flex; flex-direction:column; }
+  .rtop { display:flex; justify-content:space-between; align-items:flex-start; }
+  .rtop h3 { font-size:17px; color:var(--navy); margin-bottom:6px; }
+  .rtop .price { font-size:21px; font-weight:800; color:var(--navy); text-align:right; }
+  .rtop .price small { display:block; font-size:11px; font-weight:600; color:var(--text-muted); }
+  .rtags { display:flex; gap:6px; margin: 8px 0 12px; }
+  .rtags span { background:#eef1f7; color:#3a4457; font-size:11px; font-weight:700; padding:4px 9px; border-radius:5px; }
+  .rtags span.wheel { background:#e8f9f4; color:#0c8a72; }
+  .rmeta { display:flex; gap:22px; font-size:13px; color:var(--text-muted); margin-bottom:auto; }
+  .rmeta b { color:var(--navy); }
+  .rfoot { display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+  .seller { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-muted); }
+  .seller .dot { width:8px; height:8px; border-radius:50%; background:var(--teal); }
+
+  .pagination { display:flex; justify-content:center; gap:8px; margin-top:12px; }
+  .pagination span { width:36px; height:36px; border-radius:8px; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-size:13.5px; font-weight:700; color:var(--navy); }
+  .pagination span.on { background:var(--blue); color:#fff; border-color:var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><span class="tag">PI</span>Projeto Integrador II — Tecnologia para Mobilidade Inclusiva</div>
+  <div>Central de Ajuda&nbsp;&nbsp;•&nbsp;&nbsp;Anuncie seu veículo</div>
+</div>
+
+<header class="main">
+  <div class="logo">
+    <div class="mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+    </div>
+    <div>PCD Motors<small>MOBILIDADE SEM BARREIRAS</small></div>
+  </div>
+  <nav class="mainnav">
+    <a href="#" class="active">Comprar</a>
+    <a href="#">Anunciar</a>
+    <a href="#">Oficinas Parceiras</a>
+    <a href="#">Como Funciona</a>
+  </nav>
+  <div class="header-actions">
+    <a class="btn btn-ghost">Entrar</a>
+    <a class="btn btn-primary">+ Anunciar grátis</a>
+  </div>
+</header>
+
+<div class="breadcrumb">Início / <b>Veículos adaptados</b> / Itapetininga - SP</div>
+<div class="page-head">
+  <div>
+    <h1>324 veículos adaptados encontrados</h1>
+    <p>Filtrado por: Comando manual · Itapetininga - SP · até R$ 130.000</p>
+  </div>
+  <div class="sort">
+    Ordenar por
+    <div class="box">Mais relevantes
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14284b" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="filters">
+    <h2>Filtros especializados</h2>
+
+    <div class="fgroup">
+      <h3>Tipo de adaptação</h3>
+      <div class="chk on"><div class="box"></div>Comando manual freio/acelerador<span class="count">142</span></div>
+      <div class="chk"><div class="box"></div>Elevador para cadeira de rodas<span class="count">58</span></div>
+      <div class="chk"><div class="box"></div>Adaptação de embreagem<span class="count">37</span></div>
+      <div class="chk"><div class="box"></div>Direção assistida<span class="count">61</span></div>
+      <div class="chk"><div class="box"></div>Transferência automática<span class="count">26</span></div>
+    </div>
+
+    <div class="fgroup">
+      <h3>Categoria de CNH</h3>
+      <div class="chk"><div class="box"></div>Categoria B (adaptado)<span class="count">210</span></div>
+      <div class="chk"><div class="box"></div>Categoria AB<span class="count">44</span></div>
+    </div>
+
+    <div class="fgroup">
+      <h3>Faixa de preço</h3>
+      <div class="range-track"><div class="fill"></div><div class="knob" style="left:18%"></div><div class="knob" style="left:63%"></div></div>
+      <div class="range-vals"><span>R$ 25.000</span><span>R$ 130.000</span></div>
+    </div>
+
+    <div class="fgroup">
+      <h3>Vendedor</h3>
+      <div class="chk"><div class="box"></div>Particular<span class="count">198</span></div>
+      <div class="chk"><div class="box"></div>Concessionária<span class="count">126</span></div>
+    </div>
+
+    <button class="btn-clear">Limpar filtros</button>
+  </aside>
+
+  <main class="results">
+
+    <div class="rcard">
+      <div class="rphoto">
+        <span class="badge">✓ Laudo verificado</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="rbody">
+        <div class="rtop">
+          <div>
+            <h3>Fiat Doblô Adventure 1.8</h3>
+            <div class="rtags"><span class="wheel">♿ Comando manual</span><span>Automático</span><span>Flex</span></div>
+          </div>
+          <div class="price">R$ 98.900<small>à vista ou financiado</small></div>
+        </div>
+        <div class="rmeta"><span><b>2021</b> ano</span><span><b>38.200</b> km</span><span><b>Itapetininga-SP</b></span></div>
+        <div class="rfoot">
+          <div class="seller"><div class="dot"></div>Vendedor particular · há 3 dias</div>
+          <a class="btn btn-outline">Ver detalhes</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rcard">
+      <div class="rphoto">
+        <span class="badge">✓ Laudo verificado</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="rbody">
+        <div class="rtop">
+          <div>
+            <h3>VW Voyage 1.6 Adaptado</h3>
+            <div class="rtags"><span class="wheel">♿ Comando manual</span><span>Manual</span><span>Flex</span></div>
+          </div>
+          <div class="price">R$ 62.300<small>à vista ou financiado</small></div>
+        </div>
+        <div class="rmeta"><span><b>2019</b> ano</span><span><b>62.000</b> km</span><span><b>Itapetininga-SP</b></span></div>
+        <div class="rfoot">
+          <div class="seller"><div class="dot"></div>Vendedor particular · há 1 semana</div>
+          <a class="btn btn-outline">Ver detalhes</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rcard">
+      <div class="rphoto">
+        <span class="badge">✓ Laudo verificado</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="rbody">
+        <div class="rtop">
+          <div>
+            <h3>Chevrolet Onix Plus 1.0 Turbo</h3>
+            <div class="rtags"><span class="wheel">♿ Comando manual</span><span>Automático</span><span>Flex</span></div>
+          </div>
+          <div class="price">R$ 89.700<small>à vista ou financiado</small></div>
+        </div>
+        <div class="rmeta"><span><b>2022</b> ano</span><span><b>29.800</b> km</span><span><b>Tatuí-SP</b></span></div>
+        <div class="rfoot">
+          <div class="seller"><div class="dot"></div>Concessionária parceira · há 2 dias</div>
+          <a class="btn btn-outline">Ver detalhes</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rcard">
+      <div class="rphoto">
+        <span class="badge">✓ Laudo verificado</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+      </div>
+      <div class="rbody">
+        <div class="rtop">
+          <div>
+            <h3>Hyundai HB20S Comfort</h3>
+            <div class="rtags"><span class="wheel">♿ Comando manual</span><span>Automático</span><span>Flex</span></div>
+          </div>
+          <div class="price">R$ 76.200<small>à vista ou financiado</small></div>
+        </div>
+        <div class="rmeta"><span><b>2020</b> ano</span><span><b>45.100</b> km</span><span><b>Boituva-SP</b></span></div>
+        <div class="rfoot">
+          <div class="seller"><div class="dot"></div>Vendedor particular · há 5 dias</div>
+          <a class="btn btn-outline">Ver detalhes</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <span class="on">1</span><span>2</span><span>3</span><span>4</span><span>…</span><span>27</span>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="cols">
+    <div>
+      <h4>PCD Motors</h4>
+      <p>Marketplace exclusivo para compra e venda de veículos já adaptados para pessoas com deficiência. Projeto Integrador II — Mobilidade Inclusiva.</p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul><li>Comprar veículos</li><li>Anunciar veículo</li><li>Oficinas parceiras</li><li>Como funciona</li></ul>
+    </div>
+    <div>
+      <h4>Suporte</h4>
+      <ul><li>Central de ajuda</li><li>Segurança na negociação</li><li>Fale conosco</li></ul>
+    </div>
+    <div>
+      <h4>Projeto</h4>
+      <ul><li>Sobre o Plano de Ação</li><li>Stakeholders</li><li>Equipe</li></ul>
+    </div>
+  </div>
+  <div class="bottom">
+    <span>© 2026 PCD Motors — Projeto Integrador II</span>
+    <span>Protótipo acadêmico, não comercial</span>
+  </div>
+</footer>
+
+</body>
+</html>
