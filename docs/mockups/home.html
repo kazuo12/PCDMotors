@@ -2,420 +2,1405 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCD Motors — Marketplace de veículos adaptados para PcD</title>
+<meta name="description" content="O único marketplace que filtra veículos por tipo de adaptação — comando manual, elevador de cadeira, embreagem automatizada — com laudo do Detran conferido.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2064%2064%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M47.4%2033.3A18%2018%200%201%201%2036.2%2021.1%27%20stroke%3D%27%2314284b%27%20stroke-width%3D%276.5%27%20stroke-linecap%3D%27round%27%2F%3E%3Cpath%20d%3D%27M30%2038L50%2014%27%20stroke%3D%27%230aab8f%27%20stroke-width%3D%277%27%20stroke-linecap%3D%27round%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2738%27%20r%3D%275.4%27%20fill%3D%27%2314284b%27%2F%3E%3C%2Fsvg%3E">
-<title>PCD Motors — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
-  color: #1a2332;
-  background: #f4f6f9;
-}
+/* ============================================================
+   TOKENS
+   ============================================================ */
 :root {
-  --navy: #14284b;
-  --blue: #1c5cff;
-  --blue-dark: #0f3fc2;
-  --teal: #0aab8f;
-  --amber: #ffb020;
-  --bg: #f4f6f9;
-  --card: #ffffff;
-  --border: #e2e6ee;
-  --text-muted: #5b6577;
-}
-a { text-decoration: none; color: inherit; }
+  /* night surfaces — constant in both themes (designed dark) */
+  --night:      #0a1424;
+  --night-2:    #101d33;
+  --night-3:    #16263f;
+  --night-line: #21334f;
+  --night-text: #eaf0fb;
+  --night-mute: #8698ba;
 
-/* ---------- Header ---------- */
-.topbar {
-  background: var(--navy);
-  color: #fff;
-  font-size: 13px;
-  padding: 7px 60px;
-  display: flex;
-  justify-content: space-between;
-  letter-spacing: .2px;
+  /* brand */
+  --navy:     #14284b;
+  --teal:     #0aab8f;
+  --teal-lit: #2fe3bd;
+
+  /* theme-aware page */
+  --paper:   #f2f4f7;
+  --surface: #ffffff;
+  --sunken:  #e9edf3;
+  --ink:     #0d1b30;
+  --muted:   #5b6880;
+  --line:    #dce2ec;
+  --line-2:  #eceff5;
+
+  --fav-bg: rgba(255,255,255,.92);
+  --fav-fg: #14284b;
+  --tick: rgba(47, 227, 189, .55);
+  --shadow: 0 1px 2px rgba(13,27,48,.05), 0 8px 24px -12px rgba(13,27,48,.18);
+  --shadow-lift: 0 2px 4px rgba(13,27,48,.06), 0 22px 44px -20px rgba(13,27,48,.30);
+
+  --ease: cubic-bezier(.2,.7,.2,1);
 }
-.topbar span.tag {
-  background: var(--teal);
-  color: #06251f;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-right: 8px;
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:   #070c16;
+    --surface: #0e1729;
+    --sunken:  #0a1220;
+    --ink:     #e7edf9;
+    --muted:   #8e9cb8;
+    --line:    #1e2b45;
+    --fav-bg: rgba(12,22,40,.82);
+    --fav-fg: #cfdcf5;
+    --line-2:  #16223a;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.5), 0 22px 44px -20px rgba(0,0,0,.8);
+  }
 }
-header.main {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 18px 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+:root[data-theme="dark"] {
+  --paper:   #070c16;
+  --surface: #0e1729;
+  --sunken:  #0a1220;
+  --ink:     #e7edf9;
+  --muted:   #8e9cb8;
+  --line:    #1e2b45;
+  --fav-bg: rgba(12,22,40,.82);
+  --fav-fg: #cfdcf5;
+  --line-2:  #16223a;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift: 0 2px 4px rgba(0,0,0,.5), 0 22px 44px -20px rgba(0,0,0,.8);
 }
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  font-size: 24px;
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: "Bricolage Grotesque", "IBM Plex Sans", sans-serif;
   font-weight: 800;
-  color: var(--navy);
+  letter-spacing: -.03em;
+  line-height: 1.04;
+  margin: 0;
+  text-wrap: balance;
 }
-.logo .mark {
-  width: 46px; height: 46px;
-  flex-shrink: 0;
-  display: block;
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: none; background: none; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--teal-lit);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
-.logo small {
-  display:block;
+
+.shell { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
+
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
   font-weight: 600;
-  color: var(--teal);
-  letter-spacing: .5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
-nav.mainnav {
-  display: flex;
-  gap: 34px;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--navy);
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   TOPBAR + HEADER
+   ============================================================ */
+.topbar {
+  background: #060d1a;
+  color: var(--night-mute);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .05em;
 }
-nav.mainnav a.active { color: var(--blue); }
-.header-actions { display:flex; align-items:center; gap:14px; }
+.topbar .shell {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding-top: 8px; padding-bottom: 8px;
+  flex-wrap: wrap;
+}
+.topbar b { color: var(--teal-lit); font-weight: 600; }
+
+.site-head {
+  position: sticky; top: 0; z-index: 50;
+  background: transparent;
+  transition: background .3s var(--ease), border-color .3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+.site-head.stuck {
+  background: rgba(10,20,36,.86);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--night-line);
+}
+.site-head .shell {
+  display: flex; align-items: center; gap: 34px;
+  padding-top: 16px; padding-bottom: 16px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand svg { width: 40px; height: 40px; flex-shrink: 0; display: block; }
+.brand .wm b {
+  display: block;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 800; font-size: 20px; letter-spacing: -.03em;
+  color: var(--night-text); line-height: 1.05;
+}
+.brand .wm span {
+  display: block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8.5px; letter-spacing: .16em;
+  color: var(--teal-lit); padding-top: 2px;
+}
+
+.site-nav { display: flex; gap: 26px; margin-left: 12px; }
+.site-nav a {
+  font-size: 14.5px; font-weight: 500; color: var(--night-mute);
+  padding: 4px 0; position: relative; transition: color .2s var(--ease);
+}
+.site-nav a::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: -2px;
+  height: 1.5px; background: var(--teal-lit);
+  transition: right .28s var(--ease);
+}
+.site-nav a:hover { color: var(--night-text); }
+.site-nav a:hover::after { right: 0; }
+.site-nav a[aria-current] { color: var(--night-text); }
+.site-nav a[aria-current]::after { right: 0; }
+
+.head-cta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.nav-toggle {
+  display: none;
+  width: 42px; height: 42px; border-radius: 8px;
+  border: 1px solid var(--night-line);
+  color: var(--night-text);
+  align-items: center; justify-content: center;
+}
+.nav-toggle span {
+  display: block; width: 17px; height: 1.6px; background: currentColor;
+  position: relative; border-radius: 2px;
+  transition: transform .28s var(--ease), background .2s var(--ease);
+}
+.nav-toggle span::before, .nav-toggle span::after {
+  content: ""; position: absolute; left: 0; width: 17px; height: 1.6px;
+  background: currentColor; border-radius: 2px;
+  transition: transform .28s var(--ease), top .2s var(--ease);
+}
+.nav-toggle span::before { top: -5.5px; }
+.nav-toggle span::after  { top:  5.5px; }
+.nav-toggle[aria-expanded="true"] span { background: transparent; }
+.nav-toggle[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span::after  { top: 0; transform: rotate(-45deg); }
+
 .btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  display: inline-flex; align-items:center; gap:8px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 20px; border-radius: 7px;
+  font-size: 14px; font-weight: 600; letter-spacing: -.005em;
+  transition: transform .18s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
 }
-.btn-primary { background: var(--blue); color: #fff; }
-.btn-outline { background: #fff; color: var(--navy); border: 1.5px solid var(--border); }
-.btn-ghost { background: transparent; color: var(--navy); font-weight: 600; }
+.btn:active { transform: translateY(1px); }
+.btn-teal { background: var(--teal-lit); color: #05221c; }
+.btn-teal:hover { background: #4df0cd; box-shadow: 0 8px 24px -8px rgba(47,227,189,.5); }
+.btn-wire {
+  border: 1px solid var(--night-line); color: var(--night-text);
+  background: rgba(255,255,255,.03);
+}
+.btn-wire:hover { background: rgba(255,255,255,.08); }
+.btn-ink { background: var(--navy); color: #fff; }
+.btn-ink:hover { background: #1c3865; }
+.btn-quiet {
+  border: 1px solid var(--line); color: var(--ink); background: var(--surface);
+}
+.btn-quiet:hover { border-color: var(--muted); }
+.btn-lg { padding: 14px 26px; font-size: 15px; }
 
-/* ---------- Footer ---------- */
-footer {
-  background: var(--navy);
-  color: #c7d0e0;
-  padding: 46px 60px 26px;
-  margin-top: 60px;
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  background: var(--night);
+  color: var(--night-text);
+  position: relative;
+  overflow: hidden;
+  margin-top: -73px;
+  padding-top: 73px;
 }
-footer .cols {
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(120,160,220,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,160,220,.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(115% 85% at 72% 8%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(115% 85% at 72% 8%, #000 25%, transparent 78%);
+  pointer-events: none;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 780px; height: 780px; right: -240px; top: -400px;
+  background: radial-gradient(circle, rgba(10,171,143,.20), transparent 62%);
+  pointer-events: none;
+}
+.hero .shell { position: relative; z-index: 2; }
+
+.hero-top {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  gap: 40px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #2a3a5c;
+  grid-template-columns: minmax(0,1.45fr) minmax(0,.55fr);
+  gap: 56px;
+  align-items: end;
+  padding: 74px 0 52px;
 }
-footer h4 { color:#fff; font-size:14px; margin-bottom:14px; }
-footer p, footer li { font-size: 13px; line-height: 2; color: #9fb0cc; list-style:none; }
-footer .bottom {
-  padding-top: 18px;
-  display:flex; justify-content:space-between;
-  font-size: 12px; color: #7d8cab;
+
+.hero-eyebrow {
+  color: var(--teal-lit);
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 22px;
 }
-</style>
-<style>
-  .hero {
-    background: radial-gradient(120% 160% at 15% 0%, #1c5cff 0%, #123a94 45%, #0c2358 100%);
-    padding: 64px 60px 90px;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::after {
-    content:"";
-    position:absolute; right:-80px; top:-60px;
-    width:420px; height:420px; border-radius:50%;
-    background: radial-gradient(circle, rgba(10,171,143,.35), transparent 70%);
-  }
-  .hero-inner { max-width: 760px; position: relative; z-index:2; }
-  .eyebrow {
-    display:inline-flex; align-items:center; gap:8px;
-    background: rgba(10,171,143,.18); border:1px solid rgba(10,171,143,.5);
-    color:#5be8cd; font-weight:700; font-size:12.5px;
-    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
-  }
-  .hero h1 { font-size: 44px; line-height:1.15; font-weight:800; margin-bottom:16px; }
-  .hero h1 span { color: #5be8cd; }
-  .hero p.lead { font-size: 17px; color:#c9d6f5; max-width:560px; margin-bottom:34px; line-height:1.6; }
+.hero-eyebrow::before {
+  content: ""; width: 26px; height: 1.5px; background: var(--teal-lit); display: block;
+}
 
-  .searchbox {
-    background:#fff; border-radius: 14px; padding: 18px;
-    display:flex; gap:12px; box-shadow: 0 20px 50px rgba(8,20,50,.35);
-    position: relative; z-index:2; max-width: 900px;
-  }
-  .field { flex:1; display:flex; flex-direction:column; gap:4px; padding: 4px 14px; border-right:1px solid var(--border); }
-  .field:last-of-type { border-right:none; }
-  .field label { font-size:11px; font-weight:700; color: var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
-  .field .val { font-size:14.5px; font-weight:600; color: var(--navy); display:flex; align-items:center; justify-content:space-between; gap:6px;}
-  .searchbox .btn-primary { align-self:center; padding:14px 26px; border-radius:10px; }
+.hero h1 {
+  font-size: clamp(36px, 4.9vw, 59px);
+  text-wrap: pretty;
+  margin-bottom: 22px;
+}
+.hero h1 .strike {
+  position: relative;
+  white-space: nowrap;
+}
+.hero h1 .strike::after {
+  content: ""; position: absolute; left: -.04em; right: -.04em; top: 56%;
+  height: 4px; background: #ff5c5c; border-radius: 2px;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .5s var(--ease) .8s;
+}
+.hero.lit h1 .strike::after { transform: scaleX(1); }
 
-  .stats { display:flex; gap:56px; margin-top: 42px; position:relative; z-index:2; }
-  .stats .stat b { font-size:26px; display:block; }
-  .stats .stat span { font-size:12.5px; color:#a9bce8; }
+.hero-lead {
+  font-size: 17.5px; line-height: 1.62; color: #b9c8e2;
+  max-width: 56ch;
+}
+.hero-lead b { color: var(--night-text); font-weight: 600; }
 
-  section { padding: 56px 60px; }
-  .section-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; }
-  .section-head h2 { font-size: 26px; color: var(--navy); }
-  .section-head p { color: var(--text-muted); font-size:14.5px; margin-top:6px; }
-  .link-more { color: var(--blue); font-weight:700; font-size:14px; display:flex; align-items:center; gap:6px; }
+.hero-figures { display: flex; flex-direction: column; gap: 2px; }
+.figure {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 13px 0;
+  border-top: 1px solid var(--night-line);
+}
+.figure:last-child { border-bottom: 1px solid var(--night-line); }
+.figure b {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 30px; font-weight: 700; letter-spacing: -.03em;
+  color: var(--night-text); min-width: 84px;
+}
+.figure span { font-size: 13px; color: var(--night-mute); line-height: 1.35; }
 
-  .cat-grid { display:grid; grid-template-columns: repeat(6,1fr); gap:16px; }
-  .cat-card {
-    background:#fff; border:1px solid var(--border); border-radius:12px;
-    padding: 20px 14px; text-align:center; transition:.2s;
-  }
-  .cat-card .icon-wrap {
-    width:52px; height:52px; border-radius:12px; margin:0 auto 12px;
-    background: #eaf1ff; display:flex; align-items:center; justify-content:center;
-    color: var(--blue);
-  }
-  .cat-card p { font-size:13px; font-weight:700; color: var(--navy); line-height:1.3; }
+/* ---------- the instrument ---------- */
+.instrument {
+  position: relative;
+  background: linear-gradient(180deg, var(--night-2), #0c1728);
+  border: 1px solid var(--night-line);
+  border-radius: 4px;
+  margin-bottom: 72px;
+}
+.tick {
+  position: absolute; width: 9px; height: 9px;
+  border: 1.5px solid var(--tick);
+  pointer-events: none;
+}
+.tick.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.tick.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.tick.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.tick.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
-  .veh-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:22px; }
-  .veh-card { background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-  .veh-photo { height:150px; position:relative;
-    background: linear-gradient(135deg,#dbe6fb,#eef3ff);
-    display:flex; align-items:center; justify-content:center; color:#9fb3e0;
-  }
-  .veh-photo .badge {
-    position:absolute; top:10px; left:10px;
-    background: var(--teal); color:#fff; font-size:10.5px; font-weight:800;
-    padding: 4px 9px; border-radius:6px; letter-spacing:.3px;
-  }
-  .veh-photo .fav { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.9); display:flex; align-items:center; justify-content:center; }
-  .veh-body { padding: 16px; }
-  .veh-body h3 { font-size:15.5px; color:var(--navy); margin-bottom:6px; }
-  .veh-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
-  .veh-tags span { background:#eef1f7; color:#3a4457; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:5px; }
-  .veh-meta { display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--text-muted); margin-bottom:10px; }
-  .veh-price { font-size:19px; font-weight:800; color: var(--navy); }
-  .veh-price small { font-size:11px; font-weight:600; color:var(--text-muted); display:block; }
+.inst-head {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 15px 22px;
+  border-bottom: 1px solid var(--night-line);
+}
+.inst-head .eyebrow { color: var(--night-mute); }
+.inst-head .live {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--teal-lit);
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--teal-lit);
+  box-shadow: 0 0 0 0 rgba(47,227,189,.6);
+  animation: pulse 2.4s var(--ease) infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(47,227,189,.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(47,227,189,0); }
+  100% { box-shadow: 0 0 0 0 rgba(47,227,189,0); }
+}
 
-  .how { display:grid; grid-template-columns: repeat(3,1fr); gap:26px; }
-  .how-step { background:#fff; border:1px solid var(--border); border-radius:14px; padding:26px; }
-  .how-step .num {
-    width:36px; height:36px; border-radius:50%; background: var(--navy); color:#fff;
-    display:flex; align-items:center; justify-content:center; font-weight:800; margin-bottom:16px;
-  }
-  .how-step h3 { font-size:16px; color:var(--navy); margin-bottom:8px; }
-  .how-step p { font-size:13.5px; color:var(--text-muted); line-height:1.6; }
+.inst-body {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 250px;
+  gap: 0;
+}
+.chips-pane { padding: 22px; border-right: 1px solid var(--night-line); }
+.chips-label {
+  color: var(--night-mute);
+  margin-bottom: 14px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 15px 10px 12px;
+  border: 1px solid var(--night-line);
+  border-radius: 6px;
+  background: rgba(255,255,255,.025);
+  color: #c3d1e8;
+  font-size: 13.5px; font-weight: 500;
+  transition: border-color .2s var(--ease), background .2s var(--ease),
+              color .2s var(--ease), transform .2s var(--ease);
+}
+.chip svg { width: 17px; height: 17px; opacity: .75; transition: opacity .2s; }
+.chip .n {
+  font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  color: var(--night-mute); font-variant-numeric: tabular-nums;
+}
+.chip:hover { border-color: #33507c; background: rgba(255,255,255,.06); color: var(--night-text); }
+.chip[aria-pressed="true"] {
+  background: rgba(47,227,189,.13);
+  border-color: rgba(47,227,189,.55);
+  color: #d9fff5;
+}
+.chip[aria-pressed="true"] svg { opacity: 1; color: var(--teal-lit); }
+.chip[aria-pressed="true"] .n { color: var(--teal-lit); }
+.chip.ping { transform: translateY(-2px); }
 
-  .cta-banner {
-    margin: 20px 60px 0; border-radius:18px; padding: 40px 48px;
-    background: linear-gradient(120deg, #0aab8f, #0c8a72);
-    display:flex; justify-content:space-between; align-items:center; color:#fff;
+.readout {
+  padding: 22px;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 3px;
+  background: rgba(255,255,255,.015);
+}
+.readout .count {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 62px; font-weight: 800; letter-spacing: -.045em;
+  line-height: .92; color: var(--teal-lit);
+  font-variant-numeric: tabular-nums;
+}
+.readout .cap { font-size: 13px; color: var(--night-mute); line-height: 1.4; }
+.readout .of {
+  font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  color: #64769a; margin-top: 8px; letter-spacing: .04em;
+}
+
+.strip-wrap { border-top: 1px solid var(--night-line); }
+.strip {
+  display: flex; gap: 12px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.strip::-webkit-scrollbar { height: 6px; }
+.strip::-webkit-scrollbar-thumb { background: var(--night-line); border-radius: 3px; }
+
+.mini {
+  flex: 0 0 236px;
+  border: 1px solid var(--night-line);
+  border-radius: 5px;
+  background: rgba(255,255,255,.028);
+  padding: 13px 14px;
+  display: flex; flex-direction: column; gap: 7px;
+  animation: pop .42s var(--ease) both;
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.mini:hover { border-color: #33507c; background: rgba(255,255,255,.06); }
+@keyframes pop {
+  from { opacity: 0; transform: translateY(9px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+.mini .mtag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: "IBM Plex Mono", monospace; font-size: 9.5px;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--teal-lit);
+}
+.mini .mtag svg { width: 13px; height: 13px; }
+.mini h4 {
+  font-size: 14.5px; font-weight: 600; margin: 0; color: var(--night-text);
+  letter-spacing: -.01em;
+}
+.mini .mrow {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--night-mute);
+}
+.mini .mprice { color: var(--night-text); font-weight: 600; font-size: 13px; }
+
+.empty {
+  padding: 26px 22px; color: var(--night-mute); font-size: 14px;
+}
+
+/* ============================================================
+   SECTIONS (light)
+   ============================================================ */
+.band { padding: 82px 0; }
+.band-sunken { background: var(--sunken); }
+
+.sec-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 28px; flex-wrap: wrap;
+  padding-bottom: 20px;
+  border-bottom: 1.5px solid var(--ink);
+  margin-bottom: 34px;
+}
+.sec-head .eyebrow { color: var(--teal); display: block; margin-bottom: 12px; }
+.sec-head h2 { font-size: clamp(26px, 3.4vw, 38px); }
+.sec-head p { margin: 8px 0 0; color: var(--muted); font-size: 15px; max-width: 46ch; }
+
+/* ---------- catalog ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+  border-color: color-mix(in srgb, var(--teal) 45%, var(--line));
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(163deg, #dfe7f4 0%, #eef2f9 46%, #e4ebf6 100%);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+:root[data-theme="dark"] .shot,
+:root:not([data-theme="light"]) .shot { }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shot {
+    background: linear-gradient(163deg, #16213a 0%, #1b2a47 46%, #141f36 100%);
   }
-  .cta-banner h3 { font-size:22px; margin-bottom:8px; }
-  .cta-banner p { font-size:14px; color:#d3f5ec; max-width:480px; }
-  .cta-banner .btn { background:#fff; color:#0c8a72; }
+}
+:root[data-theme="dark"] .shot {
+  background: linear-gradient(163deg, #16213a 0%, #1b2a47 46%, #141f36 100%);
+}
+.shot .ghost {
+  width: 58%; height: 58%; color: var(--navy); opacity: .13;
+  transition: transform .5s var(--ease), opacity .3s var(--ease);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shot .ghost { color: #7f9ad0; opacity: .2; }
+}
+:root[data-theme="dark"] .shot .ghost { color: #7f9ad0; opacity: .2; }
+.card:hover .shot .ghost { transform: scale(1.06) rotate(-2deg); opacity: .2; }
+
+.seal {
+  position: absolute; top: 11px; left: 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px 5px 7px;
+  background: var(--navy); color: #fff;
+  border-radius: 4px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9.5px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase;
+}
+.seal svg { width: 12px; height: 12px; color: var(--teal-lit); }
+
+.fav {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--fav-bg); color: var(--fav-fg);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+.fav svg { width: 15px; height: 15px; }
+.fav:hover { color: #e5484d; transform: scale(1.1); }
+.fav[aria-pressed="true"] { color: #e5484d; }
+.fav[aria-pressed="true"] svg { fill: currentColor; }
+
+.card-body { padding: 16px 17px 17px; display: flex; flex-direction: column; gap: 11px; }
+
+.adapt-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  align-self: flex-start;
+  padding: 5px 10px 5px 8px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--teal) 12%, transparent);
+  color: color-mix(in srgb, var(--teal) 82%, var(--ink));
+  font-size: 11.5px; font-weight: 600; letter-spacing: -.005em;
+}
+.adapt-tag svg { width: 14px; height: 14px; }
+
+.card h3 { font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+
+.spec {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  padding: 10px 0;
+  gap: 8px;
+}
+.spec div span {
+  display: block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1px;
+}
+.spec div b {
+  font-size: 13px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.price {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 23px; font-weight: 700; letter-spacing: -.035em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.price small {
+  display: block; font-family: "IBM Plex Sans", sans-serif;
+  font-size: 11px; font-weight: 500; color: var(--muted);
+  letter-spacing: 0; margin-top: 4px;
+}
+.card-foot .go {
+  font-size: 13px; font-weight: 600; color: var(--teal);
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: gap .2s var(--ease);
+}
+.card:hover .card-foot .go { gap: 9px; }
+.card-foot .go svg { width: 13px; height: 13px; }
+
+/* ---------- laudo panel ---------- */
+.laudo {
+  background: var(--navy);
+  color: #dce6f8;
+  border-radius: 10px;
+  padding: 46px;
+  display: grid;
+  grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr);
+  gap: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.laudo::after {
+  content: "";
+  position: absolute; right: -120px; bottom: -160px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(47,227,189,.14), transparent 62%);
+}
+.laudo > * { position: relative; z-index: 2; }
+.laudo .eyebrow { color: var(--teal-lit); display: block; margin-bottom: 14px; }
+.laudo h2 { color: #fff; font-size: clamp(24px, 3vw, 33px); margin-bottom: 14px; }
+.laudo p { color: #a8bcdc; font-size: 15px; margin: 0; max-width: 44ch; }
+
+.checks { display: flex; flex-direction: column; gap: 0; }
+.check {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.check:first-child { border-top: 1px solid rgba(255,255,255,.1); }
+.check .mark {
+  flex-shrink: 0; width: 21px; height: 21px; border-radius: 50%;
+  background: rgba(47,227,189,.16);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.check .mark svg { width: 12px; height: 12px; color: var(--teal-lit); }
+.check b { display: block; color: #fff; font-size: 14.5px; font-weight: 600; }
+.check span { font-size: 13.5px; color: #93aacf; }
+
+/* ---------- oficinas ---------- */
+.shops { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 14px; }
+.shop {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 7px; padding: 18px;
+  display: flex; flex-direction: column; gap: 5px;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.shop:hover { border-color: var(--muted); transform: translateY(-2px); }
+.shop .city {
+  font-family: "IBM Plex Mono", monospace; font-size: 10px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--teal);
+}
+.shop b { font-size: 15px; font-weight: 600; letter-spacing: -.015em; }
+.shop span { font-size: 13px; color: var(--muted); }
+.shop .dist {
+  margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--line-2);
+  font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- closing cta ---------- */
+.close-cta {
+  display: grid; grid-template-columns: minmax(0,1fr) auto;
+  gap: 32px; align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 38px 42px;
+}
+.close-cta h2 { font-size: clamp(22px, 2.6vw, 30px); margin-bottom: 8px; }
+.close-cta p { margin: 0; color: var(--muted); font-size: 15px; max-width: 52ch; }
+
+/* ---------- footer ---------- */
+.site-foot {
+  background: var(--night);
+  color: var(--night-mute);
+  padding: 58px 0 26px;
+}
+.foot-grid {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 44px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid var(--night-line);
+}
+.foot-grid p { font-size: 13.5px; line-height: 1.75; margin: 16px 0 0; max-width: 34ch; }
+.foot-grid h4 {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--night-text); margin: 0 0 14px; font-weight: 600;
+}
+.foot-grid ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.foot-grid li a { font-size: 13.5px; transition: color .2s var(--ease); }
+.foot-grid li a:hover { color: var(--night-text); }
+.foot-bottom {
+  padding-top: 20px;
+  display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  letter-spacing: .06em; color: #63758f;
+}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.js .rise { opacity: 0; transform: translateY(14px); }
+.js .rise.in {
+  opacity: 1; transform: none;
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
+}
+.hero .rise { transition-delay: var(--d, 0s); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .js .rise { opacity: 1; transform: none; }
+  .hero h1 .strike::after { transform: scaleX(1); }
+}
+
+
+/* ============================================================
+   MOTION
+   ============================================================ */
+
+/* --- masked line reveal (headline) --- */
+.line { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+.line > i { display: block; font-style: inherit; transform: translateY(108%); }
+.js .lit .line > i { animation: maskUp .95s var(--ease) both; }
+@keyframes maskUp { from { transform: translateY(108%); } to { transform: none; } }
+
+/* --- generic staged fade --- */
+.stage { opacity: 0; transform: translateY(12px); }
+.js .lit .stage { animation: stageIn .8s var(--ease) both; }
+@keyframes stageIn { to { opacity: 1; transform: none; } }
+:root:not(.js) .stage, :root:not(.js) .line > i { opacity: 1; transform: none; }
+
+/* --- logo: the lever swings into place --- */
+.logomark .ring { stroke-dasharray: 96; stroke-dashoffset: 96; }
+.logomark .lever { transform-origin: 30px 38px; transform: rotate(-46deg); opacity: 0; }
+.js .lit .logomark .ring { animation: ringDraw .85s var(--ease) .1s forwards; }
+.js .lit .logomark .lever { animation: leverIn .7s cubic-bezier(.34,1.4,.5,1) .42s forwards; }
+:root:not(.js) .logomark .ring { stroke-dashoffset: 0; }
+:root:not(.js) .logomark .lever { transform: none; opacity: 1; }
+@keyframes ringDraw { to { stroke-dashoffset: 0; } }
+@keyframes leverIn { to { transform: none; opacity: 1; } }
+.brand:hover .logomark .lever { animation: leverNudge .55s var(--ease); }
+@keyframes leverNudge {
+  0% { transform: none; } 35% { transform: rotate(-13deg); } 100% { transform: none; }
+}
+.site-foot .logomark .ring { stroke-dashoffset: 0; }
+.site-foot .logomark .lever { transform: none; opacity: 1; }
+
+/* --- ambient: the glow breathes --- */
+.js .hero::after { animation: drift 22s ease-in-out infinite; }
+@keyframes drift {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50%      { transform: translate(-46px, 34px) scale(1.1); }
+}
+
+/* --- instrument: power-on + sweep on every filter change --- */
+.instrument { --sweep: 0; }
+.inst-sweep {
+  position: absolute; top: -1px; left: 0; right: 0; height: 2px;
+  overflow: hidden; pointer-events: none; border-radius: 4px 4px 0 0;
+}
+.inst-sweep::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, var(--teal-lit), transparent);
+  transform: translateX(-100%); opacity: 0;
+}
+.instrument.swept .inst-sweep::before { animation: sweep .95s var(--ease); }
+@keyframes sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  25%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* --- readout settles like a real gauge --- */
+.readout .count { display: inline-block; transform-origin: left center; }
+.readout .count.settle { animation: settle .42s var(--ease); }
+@keyframes settle {
+  0% { transform: scale(1.055); } 60% { transform: scale(.992); } 100% { transform: scale(1); }
+}
+
+/* --- chip: icon spins home when selected --- */
+.chip[aria-pressed="true"] svg { animation: spinHome .55s var(--ease); }
+@keyframes spinHome { from { transform: rotate(-170deg) scale(.7); } to { transform: none; } }
+
+/* --- live ticker --- */
+.ticker {
+  border-top: 1px solid var(--night-line);
+  overflow: hidden; position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.ticker-track {
+  display: flex; width: max-content;
+  padding: 11px 0;
+  animation: roll 46s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+@keyframes roll { to { transform: translateX(-50%); } }
+.tick-item {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 0 26px;
+  font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  color: var(--night-mute); white-space: nowrap;
+  border-right: 1px solid var(--night-line);
+}
+.tick-item b { color: #c3d1e8; font-weight: 500; }
+.tick-item .pip {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--teal-lit); flex-shrink: 0;
+}
+
+/* --- cards: stagger, sheen, ghost parallax --- */
+.js .grid .card { opacity: 0; transform: translateY(18px); }
+.js .grid.in .card {
+  animation: cardIn .65s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 75ms);
+}
+@keyframes cardIn { to { opacity: 1; transform: none; } }
+
+.shot::after {
+  content: ""; position: absolute; inset: -20%;
+  background: linear-gradient(104deg, transparent 34%, rgba(255,255,255,.5) 48%, transparent 60%);
+  transform: translateX(-130%);
+  transition: transform .9s var(--ease);
+  pointer-events: none;
+}
+.card:hover .shot::after { transform: translateX(130%); }
+.shot .ghost {
+  transform: translate3d(var(--gx, 0px), var(--gy, 0px), 0) scale(1);
+  transition: transform .35s var(--ease), opacity .3s var(--ease);
+}
+.card:hover .shot .ghost { transition-duration: .12s; }
+
+/* --- section rule draws itself --- */
+.sec-head { border-bottom: none; position: relative; }
+.sec-head::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1.5px; background: var(--ink);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .85s var(--ease);
+}
+.sec-head.in::after { transform: scaleX(1); }
+:root:not(.js) .sec-head::after { transform: scaleX(1); }
+
+/* --- laudo: checks get drawn, one after another --- */
+.check .draw { stroke-dasharray: 30; stroke-dashoffset: 30; }
+.js .checks.in .check .draw {
+  animation: drawIt .5s var(--ease) forwards;
+  animation-delay: calc(.15s + var(--i, 0) * .13s);
+}
+@keyframes drawIt { to { stroke-dashoffset: 0; } }
+.js .checks .check { opacity: 0; transform: translateX(10px); }
+.js .checks.in .check {
+  animation: checkIn .55s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * .13s);
+}
+@keyframes checkIn { to { opacity: 1; transform: none; } }
+
+/* --- favourite pops --- */
+.fav[aria-pressed="true"] svg { animation: heartPop .45s cubic-bezier(.34,1.5,.5,1); }
+@keyframes heartPop {
+  0% { transform: scale(1); } 45% { transform: scale(1.45); } 100% { transform: scale(1); }
+}
+
+/* --- shops lift in --- */
+.js .shops.in .shop {
+  animation: cardIn .6s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+.js .shops .shop { opacity: 0; transform: translateY(14px); }
+
+/* --- reading progress --- */
+.progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 100%;
+  transform: scaleX(0); transform-origin: left;
+  background: linear-gradient(90deg, var(--teal), var(--teal-lit));
+  z-index: 100; pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .lit .line > i,
+  .js .lit .stage,
+  .js .grid.in .card,
+  .js .shops.in .shop,
+  .js .checks.in .check { animation: none; opacity: 1; transform: none; }
+  .line > i, .stage { opacity: 1; transform: none; }
+  .js .checks.in .check .draw { animation: none; stroke-dashoffset: 0; }
+  .logomark .ring { stroke-dashoffset: 0; }
+  .logomark .lever { transform: none; opacity: 1; }
+  .ticker-track { animation: none; }
+  .js .hero::after { animation: none; }
+  .progress { display: none; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1060px) {
+  .hero-top { grid-template-columns: 1fr; gap: 38px; align-items: start; }
+  .laudo { grid-template-columns: 1fr; gap: 30px; padding: 34px; }
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 820px) {
+  .shell { padding: 0 22px; }
+  .nav-toggle { display: inline-flex; }
+  .site-nav { display: none; }
+  .site-nav.open {
+    display: flex; flex-direction: column; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0;
+    margin: 0; padding: 8px 22px 18px;
+    background: rgba(10,20,36,.97);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--night-line);
+  }
+  .site-nav.open a { padding: 13px 0; border-bottom: 1px solid var(--night-line); font-size: 16px; }
+  .site-nav.open a:last-child { border-bottom: none; }
+  .site-nav.open a::after { display: none; }
+  .inst-body { grid-template-columns: 1fr; }
+  .chips-pane { border-right: none; border-bottom: 1px solid var(--night-line); }
+  .readout { flex-direction: row; align-items: baseline; gap: 16px; }
+  .readout .count { font-size: 48px; }
+  .close-cta { grid-template-columns: 1fr; padding: 28px; }
+  .band { padding: 60px 0; }
+}
+@media (max-width: 560px) {
+  .foot-grid { grid-template-columns: 1fr; }
+  .brand .wm span { display: none; }
+  .brand .wm b { font-size: 17px; white-space: nowrap; }
+  .brand svg { width: 34px; height: 34px; }
+  .site-head .shell { gap: 12px; }
+  .head-cta .btn-wire { display: none; }
+  .head-cta .btn { padding: 10px 14px; font-size: 13.5px; white-space: nowrap; }
+  .hero h1 { font-size: clamp(30px, 8.4vw, 40px); }
+  .hero-lead { font-size: 16px; }
+  .readout { flex-direction: column; }
+}
 </style>
 </head>
 <body>
+<!-- ==================== ICON DEFS ==================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-comando" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+    <circle cx="9.5" cy="14.5" r="6.2"/><path d="M13.9 10.1 19.5 4.5"/><circle cx="9.5" cy="14.5" r="1.7" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-elevador" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 20.5h18"/><path d="M5.5 15.5h13v3h-13z"/><path d="M12 12V3.5"/><path d="M8.6 6.9 12 3.5l3.4 3.4"/>
+  </symbol>
+  <symbol id="i-embreagem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 3h4.5a3 3 0 0 1 3 3v5.5a4.5 4.5 0 0 1-9 0V6a3 3 0 0 1 1.5-3z"/><path d="M11 16v5"/><path d="M7.5 21h7"/>
+  </symbol>
+  <symbol id="i-direcao" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+    <circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6V3.4M9.9 13.2 4.6 16.9M14.1 13.2 19.4 16.9"/>
+  </symbol>
+  <symbol id="i-transferencia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.5 21v-6.5a2 2 0 0 1 2-2H15"/><path d="M6.5 12.5V6a2 2 0 0 1 2-2H11"/><path d="M12.8 9.7 15.5 12.5 12.8 15.3"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12.5 10 17.5 19 7"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 12h15M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.8 5.1a5.2 5.2 0 0 0-7.4 0L12 6.5l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8.5a5.2 5.2 0 0 0 0-7.4z"/>
+  </symbol>
+  <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 13 4.3 7.6A2.4 2.4 0 0 1 6.6 6h10.8a2.4 2.4 0 0 1 2.3 1.6L21.5 13"/>
+    <path d="M2.5 13h19v4.4a1 1 0 0 1-1 1h-1.6a1 1 0 0 1-1-1v-1H6.1v1a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1z"/>
+    <circle cx="6.6" cy="16" r="1.3"/><circle cx="17.4" cy="16" r="1.3"/>
+  </symbol>
+  <symbol id="i-logo" viewBox="0 0 64 64" fill="none">
+    <path d="M47.4 33.3A18 18 0 1 1 36.2 21.1" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/>
+    <path d="M30 38 50 14" stroke="var(--teal-lit)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="30" cy="38" r="5.4" fill="currentColor"/>
+  </symbol>
+</defs></svg>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- ==================== TOPBAR ==================== -->
 <div class="topbar">
-  <div><span class="tag">PI</span>Projeto Integrador I — Tecnologia para Mobilidade Inclusiva</div>
-  <div>Central de Ajuda&nbsp;&nbsp;•&nbsp;&nbsp;Anuncie seu veículo</div>
-</div>
-
-<header class="main">
-  <div class="logo">
-    <svg class="mark" viewBox="0 0 64 64" fill="none" role="img" aria-label="PCD Motors">
-      <path d="M47.4 33.3A18 18 0 1 1 36.2 21.1" stroke="var(--navy)" stroke-width="6.5" stroke-linecap="round"/>
-      <path d="M30 38L50 14" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="30" cy="38" r="5.4" fill="var(--navy)"/>
-    </svg>
-    <div>PCD Motors<small>MOBILIDADE SEM BARREIRAS</small></div>
-  </div>
-  <nav class="mainnav">
-    <a href="#" class="active">Comprar</a>
-    <a href="#">Anunciar</a>
-    <a href="#">Oficinas Parceiras</a>
-    <a href="#">Como Funciona</a>
-  </nav>
-  <div class="header-actions">
-    <a class="btn btn-ghost">Entrar</a>
-    <a class="btn btn-primary">+ Anunciar grátis</a>
-  </div>
-</header>
-
-<div class="hero">
-  <div class="hero-inner">
-    <div class="eyebrow">♿ &nbsp;Marketplace especializado em veículos adaptados</div>
-    <h1>Encontre o carro adaptado ideal <span>para a sua autonomia.</span></h1>
-    <p class="lead">O primeiro marketplace do Brasil dedicado exclusivamente à compra e venda de veículos já adaptados para PcD — com filtros por tipo de adaptação e verificação de laudo técnico.</p>
-  </div>
-
-  <div class="searchbox">
-    <div class="field">
-      <label>Tipo de adaptação</label>
-      <div class="val">Comando manual freio/acelerador <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
-    </div>
-    <div class="field">
-      <label>Localização</label>
-      <div class="val">Itapetininga - SP <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
-    </div>
-    <div class="field">
-      <label>Marca / Modelo</label>
-      <div class="val">Todas as marcas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
-    </div>
-    <button class="btn btn-primary">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-      Buscar
-    </button>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><b>320+</b><span>veículos adaptados ativos</span></div>
-    <div class="stat"><b>48</b><span>oficinas parceiras verificadas</span></div>
-    <div class="stat"><b>100%</b><span>anúncios com laudo conferido</span></div>
+  <div class="shell">
+    <span><b>PI I</b> &nbsp;Projeto Integrador · Tecnologia para Mobilidade Inclusiva</span>
+    <span>Itapetininga · SP</span>
   </div>
 </div>
 
-<section>
-  <div class="section-head">
-    <div>
-      <h2>Busque por tipo de adaptação</h2>
-      <p>Filtros especializados que sites tradicionais não oferecem.</p>
+<!-- ==================== HERO ==================== -->
+<div class="hero" id="hero">
+
+  <header class="site-head" id="head">
+    <div class="shell">
+      <a class="brand" href="#" aria-label="PCD Motors, início">
+        <svg class="logomark" style="color:#fff" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M47.4 33.3A18 18 0 1 1 36.2 21.1" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/>
+          <path class="lever" d="M30 38 50 14" stroke="var(--teal-lit)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="30" cy="38" r="5.4" fill="currentColor"/>
+        </svg>
+        <span class="wm"><b>PCD Motors</b><span>MOBILIDADE SEM BARREIRAS</span></span>
+      </a>
+      <nav class="site-nav" id="nav" aria-label="Principal">
+        <a href="#catalogo" aria-current="page">Comprar</a>
+        <a href="#anunciar">Anunciar</a>
+        <a href="#oficinas">Oficinas</a>
+        <a href="#laudo">O laudo</a>
+      </nav>
+      <div class="head-cta">
+        <a class="btn btn-wire" href="#">Entrar</a>
+        <a class="btn btn-teal" href="#anunciar">Anunciar grátis</a>
+        <button class="nav-toggle" id="navToggle" type="button"
+                aria-expanded="false" aria-controls="nav" aria-label="Abrir menu"><span></span></button>
+      </div>
     </div>
+  </header>
+
+  <div class="shell">
+    <div class="hero-top">
+      <div>
+        <span class="eyebrow hero-eyebrow stage" style="animation-delay:.18s">Marketplace de veículos adaptados</span>
+        <h1>
+          <span class="line"><i style="animation-delay:.30s">Pare de abrir <span class="strike">40 anúncios</span></i></span>
+          <span class="line"><i style="animation-delay:.42s">para nenhum deles servir.</i></span>
+        </h1>
+        <p class="hero-lead stage" style="animation-delay:.62s">
+          Todo site de carro filtra por marca, ano e câmbio. <b>Nenhum filtra por comando manual.</b>
+          Aqui a adaptação é o primeiro filtro — e o laudo do Detran é conferido antes do anúncio entrar no ar.
+        </p>
+      </div>
+
+      <div class="hero-figures stage" id="figures" style="animation-delay:.74s">
+        <div class="figure"><b class="num" data-to="324">0</b><span>veículos adaptados<br>anunciados hoje</span></div>
+        <div class="figure"><b class="num" data-to="48">0</b><span>oficinas parceiras<br>verificadas</span></div>
+        <div class="figure"><b class="num" data-to="100" data-suffix="%">0%</b><span>com laudo do Detran<br>conferido</span></div>
+      </div>
+    </div>
+
+    <!-- ---------- INSTRUMENT ---------- -->
+    <section class="instrument stage" id="instrument" style="animation-delay:.9s" aria-label="Busca por tipo de adaptação">
+      <div class="inst-sweep"></div>
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+
+      <div class="inst-head">
+        <span class="eyebrow">Busca por adaptação</span>
+        <span class="live"><span class="dot"></span> Filtro ao vivo</span>
+      </div>
+
+      <div class="inst-body">
+        <div class="chips-pane">
+          <span class="eyebrow chips-label">Qual adaptação você precisa?</span>
+          <div class="chips" id="chips" role="group" aria-label="Tipos de adaptação"></div>
+        </div>
+        <div class="readout">
+          <div class="count num" id="count" aria-live="polite">324</div>
+          <div class="cap" id="cap">veículos compatíveis</div>
+          <div class="of" id="of">de 324 no catálogo</div>
+        </div>
+      </div>
+
+      <div class="strip-wrap">
+        <div class="strip" id="strip"></div>
+      </div>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track" id="ticker"></div>
+      </div>
+    </section>
   </div>
-  <div class="cat-grid">
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></div><p>Comando de freio e acelerador manual</p></div>
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M12 19v3M8 22h8"/></svg></div><p>Adaptação de embreagem</p></div>
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2.5"/><path d="M7 21l3-8 2-3 2 3 3 8M9 13H6M18 13h-3"/></svg></div><p>Elevador para cadeira de rodas</p></div>
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></div><p>Direção assistida / hidráulica</p></div>
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 6V4h10v2M12 10v4M9 12h6"/></svg></div><p>Transferência automática</p></div>
-    <div class="cat-card"><div class="icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17h16M6 17V9a2 2 0 0 1 2-2h2M14 17V5a2 2 0 0 1 2-2h2"/></svg></div><p>Estruturas p/ transporte de próteses</p></div>
+</div>
+
+<!-- ==================== CATÁLOGO ==================== -->
+<section class="band" id="catalogo">
+  <div class="shell">
+    <div class="sec-head rise">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h2>Anúncios verificados</h2>
+        <p>Cada card mostra a adaptação antes do preço — porque é ela que decide se o carro serve para você.</p>
+      </div>
+      <a class="btn btn-quiet" href="#">Ver os 324 veículos</a>
+    </div>
+    <div class="grid" id="grid"></div>
   </div>
 </section>
 
-<section style="padding-top:0;">
-  <div class="section-head">
-    <div>
-      <h2>Veículos em destaque</h2>
-      <p>Anúncios verificados com laudo técnico de adaptação.</p>
-    </div>
-    <div class="link-more">Ver todos os veículos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1c5cff" stroke-width="3"><path d="M9 6l6 6-6 6"/></svg></div>
-  </div>
-  <div class="veh-grid">
-
-    <div class="veh-card">
-      <div class="veh-photo">
-        <span class="badge">✓ Laudo verificado</span>
-        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
+<!-- ==================== LAUDO ==================== -->
+<section class="band band-sunken" id="laudo">
+  <div class="shell">
+    <div class="laudo rise">
+      <div>
+        <span class="eyebrow">Verificação</span>
+        <h2>O que a gente confere antes de publicar</h2>
+        <p>
+          Adaptação veicular é item de segurança. Um anúncio só entra no ar depois
+          de passar por esta checagem — e o selo no card significa que ela foi feita.
+        </p>
       </div>
-      <div class="veh-body">
-        <h3>Fiat Doblô Adventure 1.8</h3>
-        <div class="veh-tags"><span>♿ Comando manual</span><span>Automático</span></div>
-        <div class="veh-meta"><span>2021 • 38.200 km</span><span>Itapetininga-SP</span></div>
-        <div class="veh-price">R$ 98.900<small>Vendedor particular</small></div>
+      <div class="checks" id="checks">
+        <div class="check" style="--i:0">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5 10 17.5 19 7"/></svg></span>
+          <div><b>Laudo do Detran válido</b><span>Número, data de emissão e situação conferidos na base do órgão.</span></div>
+        </div>
+        <div class="check" style="--i:1">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5 10 17.5 19 7"/></svg></span>
+          <div><b>Oficina instaladora credenciada</b><span>A empresa que fez a adaptação precisa constar no nosso cadastro de parceiras.</span></div>
+        </div>
+        <div class="check" style="--i:2">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5 10 17.5 19 7"/></svg></span>
+          <div><b>Adaptação declarada = adaptação instalada</b><span>Fotos do comando confrontadas com o que o anúncio afirma ter.</span></div>
+        </div>
+        <div class="check" style="--i:3">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5 10 17.5 19 7"/></svg></span>
+          <div><b>CRLV com a observação de adaptação</b><span>O documento precisa registrar a alteração — senão a transferência trava.</span></div>
+        </div>
       </div>
-    </div>
-
-    <div class="veh-card">
-      <div class="veh-photo">
-        <span class="badge">✓ Laudo verificado</span>
-        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
-      </div>
-      <div class="veh-body">
-        <h3>Chevrolet Spin LTZ 1.8</h3>
-        <div class="veh-tags"><span>♿ Elevador de cadeira</span><span>Automático</span></div>
-        <div class="veh-meta"><span>2020 • 51.400 km</span><span>Sorocaba-SP</span></div>
-        <div class="veh-price">R$ 84.500<small>Concessionária</small></div>
-      </div>
-    </div>
-
-    <div class="veh-card">
-      <div class="veh-photo">
-        <span class="badge">✓ Laudo verificado</span>
-        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
-      </div>
-      <div class="veh-body">
-        <h3>VW Voyage 1.6 Adaptado</h3>
-        <div class="veh-tags"><span>♿ Comando manual</span><span>Manual</span></div>
-        <div class="veh-meta"><span>2019 • 62.000 km</span><span>Itapetininga-SP</span></div>
-        <div class="veh-price">R$ 62.300<small>Vendedor particular</small></div>
-      </div>
-    </div>
-
-    <div class="veh-card">
-      <div class="veh-photo">
-        <span class="badge">✓ Laudo verificado</span>
-        <span class="fav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b6577" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/></svg>
-      </div>
-      <div class="veh-body">
-        <h3>Renault Duster Oroch</h3>
-        <div class="veh-tags"><span>♿ Direção assistida</span><span>Automático</span></div>
-        <div class="veh-meta"><span>2022 • 21.900 km</span><span>Tatuí-SP</span></div>
-        <div class="veh-price">R$ 121.400<small>Concessionária</small></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section style="padding-top:0;">
-  <div class="section-head">
-    <div>
-      <h2>Como funciona</h2>
-      <p>Simples, transparente e feito para reduzir o tempo de busca.</p>
-    </div>
-  </div>
-  <div class="how">
-    <div class="how-step">
-      <div class="num">1</div>
-      <h3>Filtre pela adaptação que você precisa</h3>
-      <p>Busque por tipo de comando, categoria de CNH e localização — sem perder tempo com anúncios incompatíveis.</p>
-    </div>
-    <div class="how-step">
-      <div class="num">2</div>
-      <h3>Confira o laudo técnico verificado</h3>
-      <p>Cada anúncio traz os detalhes da adaptação e a oficina responsável pela instalação.</p>
-    </div>
-    <div class="how-step">
-      <div class="num">3</div>
-      <h3>Fale direto com o vendedor</h3>
-      <p>Envie mensagem ou chame no WhatsApp e negocie diretamente, sem intermediários.</p>
     </div>
   </div>
 </section>
 
-<div class="cta-banner">
-  <div>
-    <h3>É oficina especializada, despachante ou concessionária?</h3>
-    <p>Cadastre-se como parceiro verificado e ganhe visibilidade junto ao público PcD.</p>
+<!-- ==================== OFICINAS ==================== -->
+<section class="band" id="oficinas">
+  <div class="shell">
+    <div class="sec-head rise">
+      <div>
+        <span class="eyebrow">Rede</span>
+        <h2>Oficinas parceiras</h2>
+        <p>Quem instalou o comando também faz a manutenção. As parceiras aparecem no anúncio do carro que adaptaram.</p>
+      </div>
+      <a class="btn btn-quiet" href="#">Ver as 48 oficinas</a>
+    </div>
+    <div class="shops" id="shops">
+      <div class="shop" style="--i:0"><span class="city">Itapetininga</span><b>AutoAdapt</b><span>Comandos manuais e acelerador esquerdo</span><span class="dist">2,4 km · 61 adaptações na plataforma</span></div>
+      <div class="shop" style="--i:1"><span class="city">Sorocaba</span><b>Mobilidade Total</b><span>Elevadores e plataformas de cadeira</span><span class="dist">14 km · 38 adaptações na plataforma</span></div>
+      <div class="shop" style="--i:2"><span class="city">Tatuí</span><b>Adapta Car</b><span>Embreagem automatizada e direção assistida</span><span class="dist">22 km · 27 adaptações na plataforma</span></div>
+      <div class="shop" style="--i:3"><span class="city">Boituva</span><b>Livre Auto</b><span>Banco de transferência e giratório</span><span class="dist">35 km · 19 adaptações na plataforma</span></div>
+    </div>
   </div>
-  <a class="btn">Quero ser parceiro</a>
-</div>
+</section>
 
-<footer>
-  <div class="cols">
-    <div>
-      <h4>PCD Motors</h4>
-      <p>Marketplace exclusivo para compra e venda de veículos já adaptados para pessoas com deficiência. Projeto Integrador II — Mobilidade Inclusiva.</p>
-    </div>
-    <div>
-      <h4>Navegação</h4>
-      <ul><li>Comprar veículos</li><li>Anunciar veículo</li><li>Oficinas parceiras</li><li>Como funciona</li></ul>
-    </div>
-    <div>
-      <h4>Suporte</h4>
-      <ul><li>Central de ajuda</li><li>Segurança na negociação</li><li>Fale conosco</li></ul>
-    </div>
-    <div>
-      <h4>Projeto</h4>
-      <ul><li>Sobre o Plano de Ação</li><li>Stakeholders</li><li>Equipe</li></ul>
+<!-- ==================== CTA ==================== -->
+<section class="band" id="anunciar" style="padding-top:0">
+  <div class="shell">
+    <div class="close-cta rise">
+      <div>
+        <h2>Tem um carro adaptado parado na garagem?</h2>
+        <p>Anunciar é grátis. A gente confere o laudo, publica em até 24h e o anúncio já nasce na frente de quem procura exatamente a sua adaptação.</p>
+      </div>
+      <a class="btn btn-ink btn-lg" href="#">Anunciar meu veículo <svg viewBox="0 0 24 24" style="width:15px;height:15px"><use href="#i-arrow"></use></svg></a>
     </div>
   </div>
-  <div class="bottom">
-    <span>© 2026 PCD Motors — Projeto Integrador II</span>
-    <span>Protótipo acadêmico, não comercial</span>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="site-foot">
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#" aria-label="PCD Motors">
+          <svg class="logomark" style="color:#fff" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M47.4 33.3A18 18 0 1 1 36.2 21.1" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/>
+          <path class="lever" d="M30 38 50 14" stroke="var(--teal-lit)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="30" cy="38" r="5.4" fill="currentColor"/>
+        </svg>
+          <span class="wm"><b>PCD Motors</b><span>MOBILIDADE SEM BARREIRAS</span></span>
+        </a>
+        <p>O marketplace onde a adaptação vem antes da marca. Compra e venda de veículos já adaptados para pessoas com deficiência.</p>
+      </div>
+      <div>
+        <h4>Comprar</h4>
+        <ul><li><a href="#">Comando manual</a></li><li><a href="#">Elevador de cadeira</a></li><li><a href="#">Embreagem automatizada</a></li><li><a href="#">Ver tudo</a></li></ul>
+      </div>
+      <div>
+        <h4>Vender</h4>
+        <ul><li><a href="#">Anunciar veículo</a></li><li><a href="#">Como funciona o laudo</a></li><li><a href="#">Sou oficina</a></li></ul>
+      </div>
+      <div>
+        <h4>Projeto</h4>
+        <ul><li><a href="#">Plano de ação</a></li><li><a href="#">Stakeholders</a></li><li><a href="#">Equipe</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 PCD Motors · Projeto Integrador I</span>
+      <span>Kayke Müller Diniz · Gabriel Kazuo Seckler · Cibele Santiago Soares</span>
+    </div>
   </div>
 </footer>
 
+<script>
+(() => {
+  "use strict";
+  document.documentElement.classList.add("js");
+  const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- data ---------- */
+  const ADAPT = {
+    comando:       { label: "Comando manual",        icon: "i-comando",       count: 142 },
+    elevador:      { label: "Elevador de cadeira",   icon: "i-elevador",      count: 58  },
+    embreagem:     { label: "Embreagem automatizada",icon: "i-embreagem",     count: 37  },
+    direcao:       { label: "Direção assistida",     icon: "i-direcao",       count: 61  },
+    transferencia: { label: "Banco de transferência",icon: "i-transferencia", count: 26  },
+  };
+  const TOTAL = 324;
+
+  const CARS = [
+    { m:"Fiat Doblô Adventure 1.8", y:2021, km:38200, price:98900,  city:"Itapetininga", a:"comando",       cambio:"Automático", seller:"Particular" },
+    { m:"VW Voyage 1.6",            y:2019, km:62000, price:62300,  city:"Itapetininga", a:"comando",       cambio:"Manual",     seller:"Particular" },
+    { m:"Chevrolet Onix Plus 1.0",  y:2022, km:29800, price:89700,  city:"Tatuí",        a:"comando",       cambio:"Automático", seller:"Loja" },
+    { m:"Hyundai HB20S Comfort",    y:2020, km:45100, price:76200,  city:"Boituva",      a:"comando",       cambio:"Automático", seller:"Particular" },
+    { m:"Chevrolet Spin LTZ 1.8",   y:2020, km:51400, price:84500,  city:"Sorocaba",     a:"elevador",      cambio:"Automático", seller:"Loja" },
+    { m:"Renault Kangoo 1.6",       y:2018, km:78300, price:69900,  city:"Sorocaba",     a:"elevador",      cambio:"Manual",     seller:"Loja" },
+    { m:"Fiat Fiorino Endurance",   y:2021, km:41600, price:81400,  city:"Itapetininga", a:"elevador",      cambio:"Manual",     seller:"Particular" },
+    { m:"Renault Duster Oroch",     y:2022, km:21900, price:121400, city:"Tatuí",        a:"direcao",       cambio:"Automático", seller:"Loja" },
+    { m:"Toyota Corolla XEi",       y:2021, km:34700, price:139900, city:"Sorocaba",     a:"direcao",       cambio:"Automático", seller:"Loja" },
+    { m:"Ford Ka SE 1.0",           y:2019, km:57200, price:54800,  city:"Boituva",      a:"embreagem",     cambio:"Manual",     seller:"Particular" },
+    { m:"Honda Fit LX 1.5",         y:2020, km:48900, price:79300,  city:"Itapetininga", a:"embreagem",     cambio:"Automático", seller:"Particular" },
+    { m:"Nissan Kicks S 1.6",       y:2022, km:26400, price:103500, city:"Tatuí",        a:"transferencia", cambio:"Automático", seller:"Loja" },
+  ];
+
+  const brl = n => "R$ " + n.toLocaleString("pt-BR");
+  const kmf = n => n.toLocaleString("pt-BR");
+  const ico = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#${id}"></use></svg>`;
+
+  /* ---------- chips ---------- */
+  let active = null;
+  const chipsEl = document.getElementById("chips");
+
+  chipsEl.innerHTML = Object.entries(ADAPT).map(([k, v]) => `
+    <button class="chip" type="button" data-k="${k}" aria-pressed="false">
+      ${ico(v.icon)}<span>${v.label}</span><span class="n">${v.count}</span>
+    </button>`).join("");
+
+  chipsEl.addEventListener("click", e => {
+    const b = e.target.closest(".chip");
+    if (b) select(b.dataset.k === active ? null : b.dataset.k);
+  });
+
+  function select(k, silent) {
+    active = k;
+    chipsEl.querySelectorAll(".chip").forEach(c => {
+      const on = c.dataset.k === k;
+      c.setAttribute("aria-pressed", String(on));
+      if (on && !silent) { c.classList.add("ping"); setTimeout(() => c.classList.remove("ping"), 240); }
+    });
+    const target = k ? ADAPT[k].count : TOTAL;
+    tick(target);
+    document.getElementById("cap").textContent = k ? "veículos com " + ADAPT[k].label.toLowerCase() : "veículos compatíveis";
+    document.getElementById("of").textContent = k ? "de " + TOTAL + " no catálogo" : "todo o catálogo";
+    if (!RM) {
+      const inst = document.getElementById("instrument");
+      inst.classList.remove("swept"); void inst.offsetWidth; inst.classList.add("swept");
+    }
+    strip();
+  }
+
+  /* ---------- animated counter ---------- */
+  const countEl = document.getElementById("count");
+  let raf, shown = TOTAL;
+  function tick(to) {
+    cancelAnimationFrame(raf);
+    if (RM) { shown = to; countEl.textContent = to; return; }
+    const from = shown, t0 = performance.now(), dur = 620;
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 4);
+      shown = Math.round(from + (to - from) * e);
+      countEl.textContent = shown;
+      if (p < 1) raf = requestAnimationFrame(step);
+      else { countEl.classList.remove("settle"); void countEl.offsetWidth; countEl.classList.add("settle"); }
+    })(t0);
+  }
+
+  /* ---------- result strip ---------- */
+  const stripEl = document.getElementById("strip");
+  function strip() {
+    const list = active ? CARS.filter(c => c.a === active) : CARS;
+    if (!list.length) { stripEl.innerHTML = `<p class="empty">Nenhum veículo com essa adaptação em Itapetininga agora. Avise-me quando aparecer.</p>`; return; }
+    stripEl.innerHTML = list.slice(0, 8).map((c, i) => `
+      <article class="mini" style="animation-delay:${RM ? 0 : i * 45}ms">
+        <span class="mtag">${ico(ADAPT[c.a].icon)} ${ADAPT[c.a].label}</span>
+        <h4>${c.m}</h4>
+        <div class="mrow"><span>${c.y} · ${kmf(c.km)} km</span><span>${c.city}</span></div>
+        <div class="mrow"><span class="mprice">${brl(c.price)}</span><span>${c.seller}</span></div>
+      </article>`).join("");
+    stripEl.scrollLeft = 0;
+  }
+
+  /* ---------- catalog grid ---------- */
+  document.getElementById("grid").innerHTML = CARS.slice(0, 6).map((c, i) => `
+    <article class="card" style="--i:${i}">
+      <div class="shot">
+        <svg class="ghost" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-car"></use></svg>
+        <span class="seal">${ico("i-check")} Laudo conferido</span>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar ${c.m}">${ico("i-heart")}</button>
+      </div>
+      <div class="card-body">
+        <span class="adapt-tag">${ico(ADAPT[c.a].icon)} ${ADAPT[c.a].label}</span>
+        <h3>${c.m}</h3>
+        <div class="spec">
+          <div><span>Ano</span><b>${c.y}</b></div>
+          <div><span>Km</span><b>${kmf(c.km)}</b></div>
+          <div><span>Câmbio</span><b style="font-size:12px">${c.cambio}</b></div>
+        </div>
+        <div class="card-foot">
+          <span class="price">${brl(c.price)}<small>${c.seller} · ${c.city}-SP</small></span>
+          <span class="go">Ver ficha ${ico("i-arrow")}</span>
+        </div>
+      </div>
+    </article>`).join("");
+
+  document.getElementById("grid").addEventListener("click", e => {
+    const f = e.target.closest(".fav");
+    if (f) f.setAttribute("aria-pressed", f.getAttribute("aria-pressed") === "true" ? "false" : "true");
+  });
+
+  /* ---------- live ticker ---------- */
+  const AGO = ["agora", "há 3 min", "há 11 min", "há 26 min", "há 1 h", "há 2 h", "há 4 h"];
+  const tickItems = CARS.map((c, i) =>
+    `<span class="tick-item"><span class="pip"></span>
+      <b>${c.m}</b> · ${ADAPT[c.a].label} · ${c.city} · ${AGO[i % AGO.length]}</span>`).join("");
+  document.getElementById("ticker").innerHTML = tickItems + tickItems;
+
+  /* ---------- counting figures ---------- */
+  function countUp(el) {
+    const to = +el.dataset.to, sfx = el.dataset.suffix || "";
+    if (RM) { el.textContent = to + sfx; return; }
+    const t0 = performance.now(), dur = 1100;
+    (function step(t) {
+      const q = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - q, 4))) + sfx;
+      if (q < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  /* ---------- ghost parallax inside card photos ---------- */
+  if (!RM && matchMedia("(hover: hover)").matches) {
+    document.getElementById("grid").addEventListener("pointermove", e => {
+      const shot = e.target.closest(".shot");
+      if (!shot) return;
+      const r = shot.getBoundingClientRect();
+      const gx = ((e.clientX - r.left) / r.width - .5) * 18;
+      const gy = ((e.clientY - r.top) / r.height - .5) * 14;
+      shot.style.setProperty("--gx", gx.toFixed(1) + "px");
+      shot.style.setProperty("--gy", gy.toFixed(1) + "px");
+    });
+    document.getElementById("grid").addEventListener("pointerleave", e => {
+      document.querySelectorAll(".shot").forEach(sh => {
+        sh.style.setProperty("--gx", "0px"); sh.style.setProperty("--gy", "0px");
+      });
+    }, true);
+  }
+
+  /* ---------- reading progress ---------- */
+  const bar = document.getElementById("progress");
+  let ticking = false;
+  const drawBar = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    ticking = false;
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(drawBar); }
+  }, { passive: true });
+  drawBar();
+
+  /* ---------- mobile nav ---------- */
+  const nav = document.getElementById("nav");
+  const navBtn = document.getElementById("navToggle");
+  const setNav = open => {
+    nav.classList.toggle("open", open);
+    navBtn.setAttribute("aria-expanded", String(open));
+    navBtn.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+  };
+  navBtn.addEventListener("click", () => setNav(navBtn.getAttribute("aria-expanded") !== "true"));
+  nav.addEventListener("click", e => { if (e.target.tagName === "A") setNav(false); });
+  addEventListener("keydown", e => { if (e.key === "Escape") setNav(false); });
+
+  /* ---------- sticky header ---------- */
+  const head = document.getElementById("head");
+  const onScroll = () => head.classList.toggle("stuck", scrollY > 40);
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- reveal ---------- */
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); obs.unobserve(en.target); } });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: .05 });
+  document.querySelectorAll(".rise, .grid, .shops, #checks").forEach(el => io.observe(el));
+
+  /* ---------- opening sequence ---------- */
+  strip();
+  requestAnimationFrame(() => {
+    document.getElementById("hero").classList.add("lit");
+    setTimeout(() => document.querySelectorAll("#figures [data-to]").forEach(countUp), RM ? 0 : 820);
+  });
+  if (!RM) setTimeout(() => select("comando"), 1750);
+})();
+</script>
 </body>
 </html>
