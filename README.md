@@ -2,7 +2,7 @@
 
 Marketplace exclusivo para **compra e venda de veículos já adaptados para Pessoas com Deficiência (PcD)**.
 
-> Projeto desenvolvido para o **Projeto Integrador II** (Profa. Silvia Garcia), a partir da análise da empresa Webmotors e do mercado de e-commerce automotivo.
+> Projeto desenvolvido para o **Projeto Integrador I** (Profa. Silvia Garcia), a partir da análise da empresa Webmotors e do mercado de e-commerce automotivo.
 
 **Equipe:** Kayke Müller Diniz · Gabriel Kazuo Seckler · Cibele Santiago Soares
 **Região de referência:** Itapetininga - SP
