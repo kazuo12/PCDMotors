@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2064%2064%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M47.4%2033.3A18%2018%200%201%201%2036.2%2021.1%27%20stroke%3D%27%2314284b%27%20stroke-width%3D%276.5%27%20stroke-linecap%3D%27round%27%2F%3E%3Cpath%20d%3D%27M30%2038L50%2014%27%20stroke%3D%27%230aab8f%27%20stroke-width%3D%277%27%20stroke-linecap%3D%27round%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2738%27%20r%3D%275.4%27%20fill%3D%27%2314284b%27%2F%3E%3C%2Fsvg%3E">
 <title>PCD Motors — Detalhe do veículo</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -52,17 +53,15 @@ header.main {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 13px;
   font-size: 24px;
   font-weight: 800;
   color: var(--navy);
 }
 .logo .mark {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 20px;
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  display: block;
 }
 .logo small {
   display:block;
@@ -177,9 +176,11 @@ footer .bottom {
 
 <header class="main">
   <div class="logo">
-    <div class="mark">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
-    </div>
+    <svg class="mark" viewBox="0 0 64 64" fill="none" role="img" aria-label="PCD Motors">
+      <path d="M47.4 33.3A18 18 0 1 1 36.2 21.1" stroke="var(--navy)" stroke-width="6.5" stroke-linecap="round"/>
+      <path d="M30 38L50 14" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="30" cy="38" r="5.4" fill="var(--navy)"/>
+    </svg>
     <div>PCD Motors<small>MOBILIDADE SEM BARREIRAS</small></div>
   </div>
   <nav class="mainnav">
