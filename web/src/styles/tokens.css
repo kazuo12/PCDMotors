@@ -1,0 +1,95 @@
+:root {
+  /* A paleta saiu do proprio video: o bege e a poeira levantada pelo carro,
+     o azul e o ceu daquele fim de tarde. Nada de gradiente roxo-azul. */
+  --noite: #0a1424;
+  --marinho: #14284b;
+  --marinho-2: #1d3766;
+  --teal: #0aab8f;
+  --teal-claro: #2fe3bd;
+  --poeira: #e8c79a;
+  --papel: #f2f4f7;
+  --papel-2: #e7eaf0;
+  --tinta: #0f1a2b;
+  --tinta-2: #46536b;
+  --tinta-3: #78849b;
+  --linha: #d3d9e4;
+  --alerta: #c2410c;
+
+  --display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --texto: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --raio: 4px;
+  --raio-g: 10px;
+  --gaveta: 1180px;
+
+  /* Sombras curtas e de baixa opacidade: o material e papel tecnico sobre
+     mesa, nao vidro flutuando. */
+  --sombra-1: 0 1px 2px rgba(15, 26, 43, .06), 0 2px 8px rgba(15, 26, 43, .04);
+  --sombra-2: 0 2px 4px rgba(15, 26, 43, .08), 0 12px 28px rgba(15, 26, 43, .10);
+  --sombra-3: 0 24px 64px rgba(10, 20, 36, .28);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--texto);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--tinta);
+  background: var(--noite);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin: 0;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'zero' 1;
+}
+
+.oculto-visual {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* A marca aceita duas cores: anel/miolo seguem currentColor, o ponteiro sai
+   desta variavel -- assim a mesma peca serve em fundo claro e escuro. */
+:root { --marca-ponteiro: var(--teal); }
+
+.marca-completa { display: inline-flex; align-items: center; gap: 9px; }
+.marca-completa b { font-family: var(--display); font-size: 17px; letter-spacing: -.02em; }
+.marca-completa b span { color: var(--teal); }
