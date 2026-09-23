@@ -1,3 +1,5 @@
+<img src="marca/marca.svg" width="72" alt="">
+
 # PCD Motors
 
 Marketplace exclusivo para **compra e venda de veículos já adaptados para Pessoas com Deficiência (PcD)**.
@@ -6,6 +8,8 @@ Marketplace exclusivo para **compra e venda de veículos já adaptados para Pess
 
 **Equipe:** Kayke Müller Diniz · Gabriel Kazuo Seckler · Cibele Santiago Soares
 **Região de referência:** Itapetininga - SP
+
+**Site:** https://kazuo12.github.io/PCDMotors/
 
 ---
 
@@ -57,41 +61,108 @@ Um **marketplace web dedicado exclusivamente a veículos já adaptados para PcD*
 
 ---
 
-## MVP (Minimum Viable Product)
+## MVP
 
 O MVP valida a hipótese central: **compradores PcD preferem um marketplace com filtros especializados por adaptação a garimpar anúncios genéricos.**
 
-| # | Funcionalidade | Descrição |
+| # | Funcionalidade | Estado |
 |---|---|---|
-| 1 | Home com busca especializada | Campo de busca com filtro de destaque por tipo de adaptação, localização e marca/modelo |
-| 2 | Listagem de veículos com filtros | Filtros por tipo de adaptação, categoria de CNH, faixa de preço, tipo de vendedor |
-| 3 | Página de detalhe do veículo | Ficha técnica do veículo + bloco dedicado aos detalhes da adaptação (tipo, oficina responsável, laudo) |
-| 4 | Cadastro de anúncio | Formulário para vendedor cadastrar veículo, incluindo os campos de adaptação |
-| 5 | Cadastro/login simples | Conta de comprador e de vendedor |
-| 6 | Contato direto | Botão de WhatsApp / mensagem para negociar direto com o vendedor |
-| 7 | Selo de verificação | Indicação visual de que o laudo de adaptação foi conferido |
+| 1 | Home com busca especializada | pronto |
+| 2 | Listagem com filtros por adaptação, carroceria, preço, laudo e isenção | pronto |
+| 3 | Ordenação (relevância, preço, km, ano) | pronto |
+| 4 | Página de detalhe com glossário da adaptação e status do laudo | pronto |
+| 5 | Selo de verificação do laudo | pronto |
+| 6 | Comparação de até 3 veículos, adaptação por adaptação | pronto |
+| 7 | Simulador de isenção (IPI, ICMS, IPVA) com os tetos legais | pronto |
+| 8 | Cadastro/login, com a adaptação já aplicada ao catálogo | interface pronta, sem back-end |
+| 9 | Alerta quando entrar um carro compatível | interface pronta, sem back-end |
+| 10 | Contato direto com o vendedor | botão presente, sem integração |
+| 11 | Cadastro de anúncio (lado do vendedor) | não iniciado |
+| 12 | Diretório de oficinas parceiras | não iniciado |
 
 **Métrica de sucesso do MVP:** tempo médio até o usuário encontrar um veículo compatível com sua adaptação, e taxa de contato iniciado com vendedores a partir da busca filtrada.
 
 ---
 
-## Preview estático da página (mockups)
+## Rodar
 
-Telas estáticas de alta fidelidade construídas a partir do escopo acima, representando o fluxo principal do MVP: **buscar → filtrar → ver detalhes do veículo e da adaptação → contatar o vendedor.**
+```bash
+cd web
+npm install
+npm run dev              # desenvolvimento
+npm run build            # gera web/dist/ — é o conteúdo de docs/
+```
 
-1. **Home** — busca especializada (hero, filtros de destaque, categorias de adaptação, veículos em destaque)
-2. **Busca** — listagem com filtros por tipo de adaptação, categoria de CNH, faixa de preço e vendedor
-3. **Detalhe do veículo** — ficha técnica, ficha completa da adaptação, laudo e contato com o vendedor
+Versão de arquivo único, que abre do disco com dois cliques (sem servidor):
 
-As telas estão em `docs/mockups/` (`home.html`, `busca.html`, `detalhe.html` + `_shared.css`) — abra qualquer um dos arquivos direto no navegador para visualizar. As imagens estáticas (PNG) dessas telas foram geradas com Playwright e compartilhadas junto com a entrega deste projeto.
+```bash
+npx vite build --config vite.config.unico.js    # web/dist-unico/index.html
+```
 
-> Para regerar as imagens estáticas a partir do HTML: abra os arquivos em um navegador e use "Salvar como imagem"/print, ou rode um script de screenshot (ex.: Playwright) apontando para cada página em `docs/mockups/`.
+## Publicar
+
+O GitHub Pages está configurado para servir a pasta **`/docs`** da branch
+**`web-page-MVP-review`**. Depois de mexer no código:
+
+```bash
+cd web && npm run build
+rm -rf ../docs/a ../docs/app-*.js && cp -r dist/. ../docs/
+```
+
+e faça o commit da pasta `docs/`.
+
+## Onde mexer
+
+| Quero mudar | Arquivo |
+|---|---|
+| Os anúncios (preço, km, adaptações) | `web/src/data/veiculos.js` |
+| **As fotos dos anúncios** | `web/src/assets/fotos/` |
+| Texto das adaptações | `web/src/data/adaptacoes.js` |
+| Regras e alíquotas da isenção | `web/src/components/Simulador.jsx` |
+| Cores e tipografia | `web/src/styles/tokens.css` |
+| Layout | `web/src/styles/app.css` |
+| Quadros da abertura | `web/src/assets/quadros/` |
 
 ---
+
+## Mockups estáticos (primeira entrega)
+
+As telas estáticas de alta fidelidade que precederam o site continuam em
+`docs/mockups/` e seguem acessíveis:
+
+1. [Home](https://kazuo12.github.io/PCDMotors/mockups/home.html) — busca especializada
+2. [Busca](https://kazuo12.github.io/PCDMotors/mockups/busca.html) — filtros por adaptação
+3. [Detalhe](https://kazuo12.github.io/PCDMotors/mockups/detalhe.html) — ficha do veículo e da adaptação
+
+## Sobre as imagens
+
+As **12 fotos dos anúncios são recortes do vídeo gravado pelo grupo** — um sedã
+branco na terra e um SUV branco no asfalto, em instantes, enquadramentos e
+tratamentos de cor diferentes. Elas **não correspondem** aos modelos anunciados,
+e o site diz isso na ficha ("foto ilustrativa"). Para publicar de verdade, troque
+os arquivos de `web/src/assets/fotos/` mantendo a ordem dos nomes; nenhum outro
+arquivo precisa mudar.
+
+As logos das marcas vêm do
+[car-logos-dataset](https://github.com/filippofilip95/car-logos-dataset)
+(licença MIT). O catálogo é fictício: não há venda, cadastro ou coleta de dados.
+
+## Como foi feito
+
+Vite + React 19, sem biblioteca de animação. A física de mola é escrita à mão em
+`web/src/lib/mola.js` (Euler semi-implícito, passo fixo de 1/120 s, um único
+`requestAnimationFrame` para a página inteira). A reordenação da lista usa FLIP
+(`web/src/hooks/useFlip.js`). A abertura é uma sequência de 72 quadros desenhada
+num `<canvas>` conforme a rolagem — não é um `<video>`, porque *seek* em MP4
+salta para o keyframe anterior e a imagem engasga a cada arrasto.
+
+Os arquivos são servidos separadamente e não embutidos em base64: a página pinta
+depois de ~413 KB em vez de esperar um HTML de 4,3 MB, e o navegador cacheia
+fontes e imagens entre visitas.
 
 ## Próximos passos
 
 1. Validar os wireframes com usuários PcD (teste de usabilidade)
 2. Detalhar modelo de dados (veículo, adaptação, anúncio, usuário, oficina)
-3. Definir stack técnica de implementação do MVP
-4. Priorizar backlog de funcionalidades pós-MVP (avaliações, pagamentos, app mobile)
+3. Back-end para conta, alerta de adaptação e cadastro de anúncio
+4. Priorizar backlog pós-MVP (avaliações, pagamentos, app mobile)
