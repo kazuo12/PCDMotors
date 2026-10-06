@@ -4,9 +4,14 @@
 // atravessar sem encostar no navy.
 //
 // Uma so geometria, em viewBox 48 -- o mesmo desenho serve de favicon, de selo
-// gigante na abertura e de marca de 18px no topo.
-const ARCO = 'M35.72 22.08 A13.5 13.5 0 1 1 24.97 13.24';
-const PONTEIRO = 'M23 26.6 L37.92 8.44';
+// gigante na abertura, de marca de 18px no topo e de mostrador da dica de
+// rolagem, que reaproveita ARCO e gira o ponteiro conforme a pessoa desce.
+export const CENTRO = { x: 23, y: 26.6 };
+// O arco comeca em -19,6 graus e varre 298 no sentido horario.
+export const ARCO_INICIO = -19.6;
+export const ARCO_VARRE = 298;
+export const ARCO = 'M35.72 22.08 A13.5 13.5 0 1 1 24.97 13.24';
+export const PONTEIRO = 'M23 26.6 L37.92 8.44';
 
 export default function Marca({ tam = 48, duas = true, ...resto }) {
   return (

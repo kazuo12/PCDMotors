@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import Marca from './Marca';
+import Marca, { ARCO } from './Marca';
 import { QUADROS } from '../data/quadros';
+import { avancar, criar, inscrever, parado } from '../lib/mola';
 import { faixa, suave, REDUZIDO } from '../lib/util';
+
+// Mola do scrub: rigida e SUPERamortecida de proposito. Com qualquer
+// oscilacao o carro andaria de re por um instante ao parar de rolar, que e
+// muito mais feio do que o engasgo que ela veio resolver.
+// Amortecimento critico em k=260 seria 2*sqrt(260) = 32,2; fico acima disso.
+const SCRUB = { rigidez: 260, atrito: 36, massa: 1 };
 
 const LETRAS = [...'PCD MOTORS'];
 
@@ -23,8 +30,9 @@ export default function Hero({ aoProgredir }) {
     const ctx = cv.getContext('2d', { alpha: false });
 
     const imgs = new Array(QUADROS.length);
+    const mola = criar(0);
     let prontos = 0;
-    let pintado = null;   // a imagem que esta REALMENTE na tela
+    let pintado = null;   // assinatura do que esta REALMENTE na tela
     let vivo = true;
 
     const progresso = () => {
@@ -32,29 +40,59 @@ export default function Hero({ aoProgredir }) {
       if (alcance <= 0) return 0;
       return Math.max(0, Math.min(1, -sec.getBoundingClientRect().top / alcance));
     };
-    const indice = () =>
+    // Indice FRACIONARIO. Arredondar era a causa do engasgo: o quadro ficava
+    // parado por dezenas de pixels de rolagem e entao pulava de uma vez.
+    const indiceAlvo = () =>
       REDUZIDO ? QUADROS.length - 1
-        : Math.round(faixa(progresso(), 0, 0.78) * (QUADROS.length - 1));
+        : faixa(progresso(), 0, 0.78) * (QUADROS.length - 1);
 
-    function desenhar(i) {
-      i = Math.max(0, Math.min(QUADROS.length - 1, i));
-      let img = imgs[i];
-      // Enquanto o quadro exato nao decodificou, usa o vizinho mais proximo
-      // que ja esta pronto -- melhor um quadro adiantado do que tela preta.
-      if (!img || !img.complete || !img.naturalWidth) {
-        for (let d = 1; d < QUADROS.length; d++) {
-          const a = imgs[i - d], b = imgs[i + d];
-          if (a && a.complete && a.naturalWidth) { img = a; break; }
-          if (b && b.complete && b.naturalWidth) { img = b; break; }
-        }
+    // Procura o vizinho ja decodificado mais proximo -- melhor um quadro
+    // adiantado do que tela preta enquanto a sequencia ainda carrega.
+    function pronta(i) {
+      const img = imgs[i];
+      if (img && img.complete && img.naturalWidth) return img;
+      for (let d = 1; d < QUADROS.length; d++) {
+        const a = imgs[i - d], b = imgs[i + d];
+        if (a && a.complete && a.naturalWidth) return a;
+        if (b && b.complete && b.naturalWidth) return b;
       }
-      if (!img || img === pintado) return;
-      pintado = img;
+      return null;
+    }
+
+    function cobrir(img, alfa) {
       const cw = cv.width, ch = cv.height;
       const e = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       const w = img.naturalWidth * e, h = img.naturalHeight * e;
+      ctx.globalAlpha = alfa;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      ctx.globalAlpha = 1;
     }
+
+    function desenhar(f) {
+      f = Math.max(0, Math.min(QUADROS.length - 1, f));
+      const i0 = Math.floor(f);
+      const mistura = f - i0;
+      const a = pronta(i0);
+      if (!a) return;
+      const b = mistura > 0.012 ? pronta(Math.min(QUADROS.length - 1, i0 + 1)) : null;
+
+      // Nada mudou o suficiente para valer uma repintura de tela cheia.
+      const assin = a.src + '|' + (b ? b.src + '|' + mistura.toFixed(2) : '');
+      if (assin === pintado) return;
+      pintado = assin;
+
+      cobrir(a, 1);
+      // O segundo quadro entra por cima com alfa = fracao, o que da
+      // exatamente a interpolacao linear entre os dois. Em movimento rapido
+      // isso le como borrao de movimento; parado, some sozinho.
+      if (b && b !== a) cobrir(b, mistura);
+    }
+
+    // Nasce ja no alvo. Sem isto, recarregar a pagina com o scroll restaurado
+    // no meio do hero -- ou abrir com movimento reduzido, onde o alvo e o
+    // ultimo quadro -- fazia a sequencia correr desde o quadro 0 na primeira
+    // rolagem.
+    mola.valor = indiceAlvo();
 
     function medir() {
       const r = Math.min(devicePixelRatio || 1, 2);
@@ -63,7 +101,7 @@ export default function Hero({ aoProgredir }) {
       cv.style.width = innerWidth + 'px';
       cv.style.height = innerHeight + 'px';
       pintado = null;         // o canvas foi limpo pelo resize
-      desenhar(indice());
+      desenhar(mola.valor);
     }
 
     QUADROS.forEach((src, i) => {
@@ -78,7 +116,7 @@ export default function Hero({ aoProgredir }) {
         // e ai drawImage nao faz nada e mesmo assim marcamos como pintado --
         // era esse o bug do primeiro quadro preto. Zerar forca a repintura.
         pintado = null;
-        desenhar(indice());
+        desenhar(mola.valor);
         if (prontos >= Math.min(14, QUADROS.length)) setCarregado(true);
       };
       img.onerror = chegou;
@@ -92,19 +130,18 @@ export default function Hero({ aoProgredir }) {
     // Escrita direta no DOM: o hero repinta a cada quadro de rolagem e passar
     // isso por setState seria re-render a 60Hz da arvore inteira.
     const alvos = palco.current;
-    let pedido = 0;
 
-    function pintar() {
-      pedido = 0;
-      const p = progresso();
-      desenhar(indice());
-
+    function pintar(p) {
       const o = alvos;
       if (o) {
         o.style.setProperty('--veu', suave(faixa(p, 0.52, 0.80)).toFixed(3));
         o.style.setProperty('--selo', suave(faixa(p, 0.58, 0.72)).toFixed(3));
         o.style.setProperty('--assin', suave(faixa(p, 0.80, 0.88)).toFixed(3));
-        o.style.setProperty('--dica', (1 - faixa(p, 0.02, 0.14)).toFixed(3));
+        // A dica de rolagem agora resiste: so comeca a sumir depois que a
+        // pessoa ja percorreu um terco da abertura, e o mostrador dela
+        // acompanha o mesmo trecho que move o carro.
+        o.style.setProperty('--dica', (1 - suave(faixa(p, 0.34, 0.55))).toFixed(3));
+        o.style.setProperty('--volta', faixa(p, 0, 0.78).toFixed(4));
         for (let i = 0; i < LETRAS.length; i++) {
           o.style.setProperty(
             `--l${i}`,
@@ -118,17 +155,37 @@ export default function Hero({ aoProgredir }) {
       aoProgredir?.(p);
     }
 
-    const agendar = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
+    // O laco nao pode viver so no evento de scroll: a mola ainda tem caminho
+    // a percorrer DEPOIS do ultimo evento, e e justamente esse rabo que tira
+    // o solavanco do fim do gesto. Ele roda enquanto houver distancia a
+    // cobrir e se desliga sozinho ao assentar.
+    let soltar = null;
+    function girar() {
+      if (soltar) return;
+      soltar = inscrever((dt) => {
+        const alvo = indiceAlvo();
+        if (REDUZIDO) { mola.valor = alvo; mola.v = 0; }
+        else avancar(mola, alvo, SCRUB, dt);
+        desenhar(mola.valor);
+        pintar(progresso());
+        if (parado(mola, alvo, 0.004)) {
+          mola.valor = alvo; mola.v = 0;
+          desenhar(mola.valor);
+          soltar(); soltar = null;
+        }
+      });
+    }
 
     medir();
-    pintar();
-    addEventListener('scroll', agendar, { passive: true });
+    pintar(progresso());
+    const acordar = () => girar();
+    addEventListener('scroll', acordar, { passive: true });
     addEventListener('resize', medir);
     return () => {
       vivo = false;
-      removeEventListener('scroll', agendar);
+      removeEventListener('scroll', acordar);
       removeEventListener('resize', medir);
-      if (pedido) cancelAnimationFrame(pedido);
+      soltar?.();
     };
   }, [aoProgredir]);
 
@@ -139,10 +196,26 @@ export default function Hero({ aoProgredir }) {
         <div className="hero-palco" ref={palco}>
           <div className="hero-veu" aria-hidden="true" />
 
-          <p className="hero-dica" aria-hidden="true">
-            <span>role</span>
-            <i />
-          </p>
+          {/* Antes isto era a palavra "role" e um risco de 1px, que e
+              exatamente o tipo de dica que ninguem ve. Agora e um mostrador
+              que enche conforme a pessoa desce: diz o que fazer, mostra que
+              esta funcionando e quanto falta. */}
+          <div className="hero-dica" aria-hidden="true">
+            <svg className="hero-dica-rel" viewBox="0 0 48 48" width="68" height="68"
+                 fill="none" strokeLinecap="round">
+              <path className="hdr-trilho" d={ARCO} strokeWidth="3.4" />
+              <path className="hdr-volta" d={ARCO} strokeWidth="3.4" pathLength="100" />
+              <g className="hdr-agulha">
+                <path d="M23 26.6 L23 12.4" strokeWidth="3.2" />
+              </g>
+              <circle className="hdr-miolo" cx="23" cy="26.6" r="3.1" />
+            </svg>
+            <span className="hero-dica-texto">Role para baixo</span>
+            <svg className="hero-dica-seta" viewBox="0 0 24 14" width="22" height="13"
+                 fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+              <path d="M3 3l9 8 9-8" />
+            </svg>
+          </div>
 
           <div className="hero-marca">
             <span className="hero-selo" aria-hidden="true"><Marca tam={64} /></span>

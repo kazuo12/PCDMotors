@@ -8,6 +8,7 @@ import Filtros from './components/Filtros';
 import Hero from './components/Hero';
 import Icone from './components/Icone';
 import Simulador from './components/Simulador';
+import Vitrine from './components/Vitrine';
 import { Adaptacoes, Isencao, Manifesto, Rodape, Sobe } from './components/Secoes';
 import { useFlip } from './hooks/useFlip';
 import { ADAPTACOES } from './data/adaptacoes';
@@ -137,6 +138,8 @@ export default function App() {
         <div className="espinha" aria-hidden="true" />
 
         <Manifesto />
+
+        <Vitrine />
 
         <section className="secao busca" id="catalogo">
           <Sobe tag="p" className="rotulo mono">Catálogo</Sobe>
