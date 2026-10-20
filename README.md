@@ -116,7 +116,7 @@ e faça o commit da pasta `docs/`.
 | Quero mudar | Arquivo |
 |---|---|
 | Os anúncios (preço, km, adaptações) | `web/src/data/veiculos.js` |
-| **As fotos dos anúncios** | `web/src/assets/fotos/` |
+| **As fotos dos anúncios** | jogue em `web/fotos-entrada/` e rode `npm run fotos` |
 | Texto das adaptações | `web/src/data/adaptacoes.js` |
 | Regras e alíquotas da isenção | `web/src/components/Simulador.jsx` |
 | Cores e tipografia | `web/src/styles/tokens.css` |
@@ -134,14 +134,32 @@ As telas estáticas de alta fidelidade que precederam o site continuam em
 2. [Busca](https://kazuo12.github.io/PCDMotors/mockups/busca.html) — filtros por adaptação
 3. [Detalhe](https://kazuo12.github.io/PCDMotors/mockups/detalhe.html) — ficha do veículo e da adaptação
 
-## Sobre as imagens
+## Pôr as fotos reais dos anúncios
 
-As **12 fotos dos anúncios são recortes do vídeo gravado pelo grupo** — um sedã
-branco na terra e um SUV branco no asfalto, em instantes, enquadramentos e
-tratamentos de cor diferentes. Elas **não correspondem** aos modelos anunciados,
-e o site diz isso na ficha ("foto ilustrativa"). Para publicar de verdade, troque
-os arquivos de `web/src/assets/fotos/` mantendo a ordem dos nomes; nenhum outro
-arquivo precisa mudar.
+Baixe a foto de cada carro, jogue tudo em `web/fotos-entrada/` e rode:
+
+```bash
+cd web
+npm run fotos     # corta em 8:5, reduz, converte para webp e nomeia
+npm run build
+```
+
+O nome do arquivo só precisa **conter o modelo ou o id do anúncio** — o script
+descobre o resto. Tudo isto funciona para o mesmo carro:
+
+```
+Fiat Argo 2023 branco.jpg      argo.png      argo-23.webp
+```
+
+Ele avisa quais arquivos não reconheceu e quais anúncios ainda estão sem foto.
+
+Enquanto um anúncio não tiver foto real, ele continua usando um **recorte do
+vídeo gravado pelo grupo** (um sedã branco na terra e um SUV branco no asfalto),
+que **não corresponde** ao modelo anunciado — e só nesse caso a ficha mostra o
+aviso "foto ilustrativa". Assim que a foto real entra, o aviso some sozinho.
+
+O encaixe é por nome, não por posição: cada anúncio pede a sua foto pelo próprio
+`id`, então renomear um arquivo nunca mais troca as fotos de carro.
 
 As logos das marcas vêm do
 [car-logos-dataset](https://github.com/filippofilip95/car-logos-dataset)

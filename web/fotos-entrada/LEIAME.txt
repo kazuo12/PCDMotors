@@ -1,0 +1,21 @@
+Jogue aqui as fotos dos anúncios e rode, na pasta web/:
+
+    npm run fotos
+    npm run build
+
+Aceita jpg, png, webp, avif e tiff, em qualquer tamanho. O script corta no
+formato 8:5 do cartão, reduz para 840x525, converte para webp e grava em
+src/assets/fotos-reais/ com o nome certo.
+
+O nome do arquivo só precisa conter o modelo ou o id do anúncio. Tudo isto
+funciona para o mesmo carro:
+
+    Fiat Argo 2023 branco.jpg
+    argo.png
+    argo-23.webp
+    Argo Drive 1.3.jpeg
+
+Anúncio sem foto real continua usando o recorte do vídeo, e só nesse caso a
+ficha mostra o aviso "foto ilustrativa".
+
+Esta pasta não vai para o Git — é só a bandeja de entrada.

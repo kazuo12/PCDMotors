@@ -3,3 +3,8 @@ web/dist/
 web/dist-unico/
 .DS_Store
 *.log
+
+# bandeja de entrada das fotos; o que vale e o resultado em
+# web/src/assets/fotos-reais/
+web/fotos-entrada/*
+!web/fotos-entrada/LEIAME.txt

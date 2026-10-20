@@ -1,10 +1,10 @@
-import { FOTOS } from './fotos';
+import { fotoDe, fotoEhReal } from './fotos';
 
 // Catálogo de demonstração. Modelos, preços e quilometragens são plausíveis
 // para o mercado PcD brasileiro (2023-2024, abaixo do teto de isenção de IPI),
 // mas os anúncios são fictícios -- e as fotos vêm do vídeo do cliente, então
 // não correspondem aos modelos citados.
-export const VEICULOS = [
+const LISTA = [
   {
     id: 'argo-23', marca: 'fiat', modelo: 'Argo Drive 1.3',
     versao: 'CVT', ano: 2023, anoFab: 2023, preco: 78900, km: 24300,
@@ -12,7 +12,6 @@ export const VEICULOS = [
     cidade: 'Sorocaba', uf: 'SP', vendedor: 'Loja parceira', nota: 4.7,
     adaptacoes: ['automatico', 'acelerador-esquerdo'],
     isencoes: ['IPI', 'ICMS'], laudo: true, garantia: 'Fábrica até 2026',
-    foto: FOTOS[0],
     destaque: 'Adaptação feita na concessionária, com nota fiscal do instalador.',
   },
   {
@@ -22,7 +21,6 @@ export const VEICULOS = [
     cidade: 'Campinas', uf: 'SP', vendedor: 'Loja parceira', nota: 4.9,
     adaptacoes: ['automatico', 'pomo', 'freio-manual'],
     isencoes: ['IPI', 'ICMS', 'IPVA'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[1],
     destaque: 'Porta traseira com abertura ampla e soleira baixa para transferência.',
   },
   {
@@ -32,7 +30,6 @@ export const VEICULOS = [
     cidade: 'Itapetininga', uf: 'SP', vendedor: 'Particular', nota: 4.5,
     adaptacoes: ['automatico', 'acelerador-esquerdo'],
     isencoes: ['IPI', 'ICMS'], laudo: true, garantia: 'Sem garantia de fábrica',
-    foto: FOTOS[2],
     destaque: 'Único dono PcD, revisões em dia na rede autorizada.',
   },
   {
@@ -42,7 +39,6 @@ export const VEICULOS = [
     cidade: 'Tatuí', uf: 'SP', vendedor: 'Loja parceira', nota: 4.8,
     adaptacoes: ['automatico', 'pomo'],
     isencoes: ['IPI', 'ICMS', 'IPVA'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[3],
     destaque: 'Pomo ortopédico sob medida, trocável sem furar o volante.',
   },
   {
@@ -52,7 +48,6 @@ export const VEICULOS = [
     cidade: 'Botucatu', uf: 'SP', vendedor: 'Particular', nota: 4.3,
     adaptacoes: ['automatico', 'pedais'],
     isencoes: ['IPI'], laudo: true, garantia: 'Fábrica até 2026',
-    foto: FOTOS[4],
     destaque: 'Entrada alta: o motorista senta quase na altura da cadeira.',
   },
   {
@@ -62,7 +57,6 @@ export const VEICULOS = [
     cidade: 'Sorocaba', uf: 'SP', vendedor: 'Loja parceira', nota: 4.9,
     adaptacoes: ['automatico', 'freio-manual', 'pomo', 'elevador'],
     isencoes: ['IPI', 'ICMS', 'IPVA'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[5],
     destaque: 'Elevador de cadeira instalado de fábrica no porta-malas.',
   },
   {
@@ -72,7 +66,6 @@ export const VEICULOS = [
     cidade: 'Piracicaba', uf: 'SP', vendedor: 'Loja parceira', nota: 4.6,
     adaptacoes: ['automatico', 'acelerador-esquerdo', 'pomo'],
     isencoes: ['IPI', 'ICMS'], laudo: true, garantia: 'Fábrica até 2026',
-    foto: FOTOS[6],
     destaque: 'Porta-malas plano, cabe cadeira dobrável em pé sem forçar.',
   },
   {
@@ -82,7 +75,6 @@ export const VEICULOS = [
     cidade: 'Jundiaí', uf: 'SP', vendedor: 'Loja parceira', nota: 4.8,
     adaptacoes: ['automatico', 'giratorio', 'pomo'],
     isencoes: ['IPI', 'ICMS', 'IPVA'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[7],
     destaque: 'Banco do passageiro gira e desce, com controle no próprio banco.',
   },
   {
@@ -92,7 +84,6 @@ export const VEICULOS = [
     cidade: 'Itapetininga', uf: 'SP', vendedor: 'Particular', nota: 4.4,
     adaptacoes: ['automatico', 'acelerador-esquerdo'],
     isencoes: ['IPI', 'ICMS'], laudo: false, garantia: 'Sem garantia de fábrica',
-    foto: FOTOS[8],
     destaque: 'Laudo da adaptação vencido: exige revalidação antes da venda.',
   },
   {
@@ -102,7 +93,6 @@ export const VEICULOS = [
     cidade: 'São Roque', uf: 'SP', vendedor: 'Loja parceira', nota: 4.7,
     adaptacoes: ['automatico', 'pomo'],
     isencoes: ['IPI', 'ICMS', 'IPVA'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[9],
     destaque: 'Altura de banco elevada, boa para quem transfere sozinho.',
   },
   {
@@ -112,7 +102,6 @@ export const VEICULOS = [
     cidade: 'Salto', uf: 'SP', vendedor: 'Particular', nota: 4.2,
     adaptacoes: ['automatico', 'pedais', 'pomo'],
     isencoes: ['IPI'], laudo: true, garantia: 'Sem garantia de fábrica',
-    foto: FOTOS[10],
     destaque: 'Prolongador regulável, serve a motoristas de alturas diferentes.',
   },
   {
@@ -122,10 +111,17 @@ export const VEICULOS = [
     cidade: 'Sorocaba', uf: 'SP', vendedor: 'Loja parceira', nota: 4.6,
     adaptacoes: ['automatico', 'acelerador-esquerdo', 'pomo'],
     isencoes: ['IPI', 'ICMS'], laudo: true, garantia: 'Fábrica até 2027',
-    foto: FOTOS[11],
     destaque: 'Pedal esquerdo removível: outro motorista dirige sem adaptar nada.',
   },
 ];
+
+// A foto entra aqui, uma vez so: cada anuncio pede a sua pelo proprio id e
+// cai no recorte de reserva enquanto nao houver foto real.
+export const VEICULOS = LISTA.map((v, i) => ({
+  ...v,
+  foto: fotoDe(v.id, i),
+  fotoReal: fotoEhReal(v.id),
+}));
 
 export const CARROCERIAS = ['Hatch', 'Sedã', 'SUV'];
 

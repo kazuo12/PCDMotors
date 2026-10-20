@@ -1,0 +1,7 @@
+Fotos reais dos anúncios, uma por veículo, nomeadas com o id:
+
+    argo-23.webp   tcross-24.webp   onix-23.webp   ...
+
+Não edite nada aqui à mão: ponha as imagens em web/fotos-entrada/ e rode
+`npm run fotos`. O site acha sozinho e passa a usar a foto real no lugar do
+recorte do vídeo.

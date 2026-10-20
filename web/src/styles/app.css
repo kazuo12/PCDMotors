@@ -213,13 +213,13 @@ body {
   pointer-events: none;
 }
 
-.secao { position: relative; padding: clamp(72px, 11vw, 132px) 0; }
+.secao { position: relative; padding: clamp(80px, 11vw, 144px) 0; }
 .rotulo {
-  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--teal); margin: 0 0 16px;
+  font-size: 10.5px; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--teal); margin: 0 0 20px;
 }
-.secao h2 { font-size: clamp(28px, 4.6vw, 52px); max-width: 17ch; }
-.secao-linha { max-width: 56ch; color: var(--tinta-2); margin: 18px 0 0; }
+.secao h2 { font-size: clamp(30px, 4.3vw, 54px); max-width: 19ch; }
+.secao-linha { max-width: 52ch; color: var(--tinta-2); margin: 20px 0 0; font-size: 17px; }
 
 .sobe {
   opacity: 0; transform: translate3d(0, 14px, 0);
@@ -236,7 +236,7 @@ body {
   display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
   gap: clamp(32px, 6vw, 76px); align-items: start; margin-top: 8px;
 }
-.manifesto-titulo { max-width: 15ch; }
+.manifesto-titulo { max-width: 17ch; }
 .manifesto-texto { font-size: 17px; color: var(--tinta-2); padding-top: 9px; }
 .manifesto-texto p { margin: 0 0 16px; }
 .manifesto-texto p:last-child { margin: 0; }
@@ -259,9 +259,10 @@ body {
 .abre-filtro { display: none; }
 
 .trilho {
-  position: sticky; top: 74px;
-  border: 1px solid var(--linha); background: color-mix(in oklab, var(--papel) 55%, #fff);
-  padding: 18px 16px; border-radius: var(--raio);
+  position: sticky; top: 78px;
+  background: #fff;
+  padding: 20px 18px; border-radius: var(--raio);
+  box-shadow: var(--sombra-0);
 }
 .trilho-topo { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
 .trilho-topo h3 { font-size: 15px; letter-spacing: 0; }
@@ -326,8 +327,8 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   padding-bottom: 13px; border-bottom: 1px solid var(--linha); margin-bottom: 22px;
 }
-.catalogo-conta { margin: 0; font-size: 13.5px; color: var(--tinta-2); }
-.catalogo-conta strong { font-size: 20px; color: var(--marinho); margin-right: 5px; }
+.catalogo-conta { margin: 0; font-size: 14px; color: var(--tinta-2); }
+.catalogo-conta strong { font-size: 25px; color: var(--marinho); margin-right: 7px; letter-spacing: -.02em; }
 
 .ordena { position: relative; }
 .ordena > button {
@@ -349,16 +350,19 @@ body {
 .ordena-menu button:hover { background: var(--papel-2); color: var(--tinta); }
 .ordena-menu svg { color: var(--teal); }
 
-.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 18px; }
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(244px, 1fr)); gap: 22px; }
 
 .cartao {
-  background: #fff; border: 1px solid var(--linha); border-radius: var(--raio);
+  background: #fff; border-radius: var(--raio);
   overflow: hidden; display: flex; flex-direction: column;
-  transition: border-color .22s ease, box-shadow .28s cubic-bezier(.22,.9,.24,1),
-              transform .28s cubic-bezier(.22,.9,.24,1);
+  /* O fio de 1px virou a primeira camada da sombra: separa do fundo sem
+     desenhar uma moldura em volta do conteudo. */
+  box-shadow: var(--sombra-1);
+  transition: box-shadow .3s cubic-bezier(.22,.9,.24,1),
+              transform .3s cubic-bezier(.22,.9,.24,1);
 }
-.cartao:hover { border-color: var(--tinta-3); box-shadow: var(--sombra-2); transform: translateY(-2px); }
-.cartao.comp { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal); }
+.cartao:hover { box-shadow: var(--sombra-2); transform: translateY(-3px); }
+.cartao.comp { box-shadow: 0 0 0 1.5px var(--teal), 0 8px 20px rgba(10,171,143,.16); }
 
 .cartao-foto { position: relative; display: block; aspect-ratio: 8 / 5; overflow: hidden; background: var(--papel-2); }
 .cartao-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.22,.9,.24,1); }
@@ -417,9 +421,14 @@ body {
 .vazio h3 { font-size: 18px; }
 .vazio p { margin: 0; max-width: 42ch; font-size: 14px; }
 
-.bt { padding: 11px 18px; border-radius: var(--raio); font-size: 14px; transition: all .2s ease; }
-.bt-cheio { background: var(--marinho); color: #fff; }
-.bt-cheio:hover { background: var(--marinho-2); }
+.bt {
+  padding: 13px 24px; border-radius: var(--raio); font-size: 15px; font-weight: 500;
+  transition: background .2s ease, border-color .2s ease, color .2s ease,
+              box-shadow .25s ease, transform .18s ease;
+}
+.bt:active { transform: scale(.985); }
+.bt-cheio { background: var(--marinho); color: #fff; box-shadow: var(--sombra-1); }
+.bt-cheio:hover { background: var(--marinho-2); box-shadow: var(--sombra-2); }
 .bt-vazio { border: 1px solid var(--linha); background: #fff; color: var(--tinta-2); }
 .bt-vazio:hover { border-color: var(--marinho); color: var(--marinho); }
 
@@ -616,7 +625,14 @@ body {
      sozinha assim que ha algo selecionado, e sem ele a busca ganha a largura
      de que precisa para o placeholder caber. */
   .topo-comp { display: none; }
-  .topo-dentro { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; padding: 9px 16px; }
+  /* Quatro faixas: marca, busca, chip da conta e menu. Com tres, o botao de
+     menu caia para uma segunda linha assim que o "Entrar" entrou no topo.
+     Deslogado o chip nao existe e a quarta faixa fica com largura zero. */
+  .topo-dentro { grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; padding: 9px 16px; }
+  /* O "Entrar" sai do topo: a gaveta ja oferece "Entrar ou criar conta". */
+  .topo-entrar { display: none; }
+  .topo-conta-chip { gap: 6px; }
+  .topo-conta-chip > span { display: none; }
   .topo-marca b { font-size: 15px; }
   .topo-busca { height: 36px; padding: 0 9px; gap: 7px; }
   .topo-busca input { font-size: 13.5px; }
@@ -698,8 +714,8 @@ body {
 .sim-catalogo svg { flex: none; color: var(--teal); }
 
 .sim-painel {
-  border: 1px solid var(--linha); background: #fff; padding: 22px;
-  border-radius: var(--raio); box-shadow: var(--sombra-1);
+  background: #fff; padding: 26px;
+  border-radius: var(--raio-g); box-shadow: var(--sombra-2);
 }
 .sim-painel dl { margin: 0; display: grid; gap: 1px; }
 .sim-linha {
@@ -837,8 +853,7 @@ body {
 .ent-legal { margin: 16px 0 0; font-size: 11.5px; color: var(--tinta-3); line-height: 1.5; }
 
 @media (max-width: 860px) {
-  .sim-corpo, .vit-cabeca { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .vit-cabeca .secao-linha { padding-top: 0; }
+  .sim-corpo { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .ent { grid-template-columns: minmax(0, 1fr); }
   /* O painel da marca vira uma tira curta no celular: ocupar meia tela com
      argumento de venda antes do formulario so atrasa quem ja quer entrar. */
@@ -865,7 +880,7 @@ body {
   gap: clamp(32px, 6vw, 76px); align-items: start;
   margin-bottom: clamp(28px, 4vw, 44px);
 }
-.vit-cabeca h2 { font-size: clamp(28px, 4.6vw, 52px); max-width: 14ch; }
+.vit-cabeca h2 { font-size: clamp(30px, 4.3vw, 54px); max-width: 15ch; }
 .vit-cabeca .secao-linha { margin-top: 0; padding-top: 9px; }
 
 /* Sangra para fora do container de 1180px: a faixa precisa encostar nas duas
@@ -889,11 +904,11 @@ body {
 
 .vit-ficha {
   position: relative; flex: none; width: 272px;
-  background: #fff; border: 1px solid var(--linha); border-radius: var(--raio);
-  overflow: hidden;
+  background: #fff; border-radius: var(--raio);
+  overflow: hidden; box-shadow: var(--sombra-1);
   transition: transform .3s cubic-bezier(.22,.9,.24,1), box-shadow .3s ease;
 }
-.vit-ficha:hover { transform: translateY(-3px); box-shadow: var(--sombra-2); }
+.vit-ficha:hover { transform: translateY(-4px); box-shadow: var(--sombra-2); }
 /* height:auto e obrigatorio: os atributos width/height do <img> entram como
    dica de apresentacao do navegador e, sem um height no CSS, ganham do
    aspect-ratio -- a foto assumia os 525px literais do atributo. */
@@ -940,4 +955,16 @@ body {
   .vit-fita { animation: none; }
   .vit-trilho { overflow-x: auto; }
   .vit-pe { display: none; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Responsivo da vitrine.
+   Precisa ficar DEPOIS do bloco base dela: media query nao acrescenta
+   especificidade, entao a regra base, escrita mais abaixo no arquivo, estava
+   vencendo a versao de celular e o cabecalho seguia em duas colunas a 390px.
+   --------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .vit-cabeca { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .vit-cabeca .secao-linha { margin-top: 0; padding-top: 0; }
 }

@@ -49,7 +49,9 @@ export default function Detalhe({ v, aoFechar }) {
 
         <figure className="gav-foto">
           <img src={v.foto} alt={`${v.modelo} ${v.versao}`} width="840" height="525" />
-          <figcaption className="mono">foto ilustrativa</figcaption>
+          {/* So avisa quando a foto nao e do carro anunciado. Com foto real
+              o aviso passa a ser falso. */}
+          {!v.fotoReal && <figcaption className="mono">foto ilustrativa</figcaption>}
         </figure>
 
         <div className="gav-corpo">

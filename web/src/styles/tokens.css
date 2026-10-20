@@ -19,14 +19,24 @@
   --texto: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  --raio: 4px;
-  --raio-g: 10px;
+  /* Canto levemente mais macio que os 4px originais, mas ainda longe do
+     arredondado de app: a marca continua sendo instrumento, nao botao de iOS. */
+  --raio: 6px;
+  --raio-g: 14px;
   --gaveta: 1180px;
 
-  /* Sombras curtas e de baixa opacidade: o material e papel tecnico sobre
-     mesa, nao vidro flutuando. */
-  --sombra-1: 0 1px 2px rgba(15, 26, 43, .06), 0 2px 8px rgba(15, 26, 43, .04);
-  --sombra-2: 0 2px 4px rgba(15, 26, 43, .08), 0 12px 28px rgba(15, 26, 43, .10);
+  /* Elevacao em camadas: um fio de contato colado no objeto, uma sombra curta
+     que da peso e uma longa e MUITO fraca que separa do fundo. Uma sombra so,
+     dura, denuncia o elemento; tres fracas somem e deixam a coisa no ar. */
+  --sombra-0: 0 0 0 1px rgba(15, 26, 43, .05),
+              0 1px 1px rgba(15, 26, 43, .04);
+  --sombra-1: 0 0 0 1px rgba(15, 26, 43, .05),
+              0 1px 2px rgba(15, 26, 43, .05),
+              0 4px 12px rgba(15, 26, 43, .05);
+  --sombra-2: 0 0 0 1px rgba(15, 26, 43, .06),
+              0 2px 4px rgba(15, 26, 43, .06),
+              0 10px 24px rgba(15, 26, 43, .09),
+              0 24px 48px rgba(15, 26, 43, .06);
   --sombra-3: 0 24px 64px rgba(10, 20, 36, .28);
 }
 
@@ -37,8 +47,8 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   font-family: var(--texto);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 17px;
+  line-height: 1.6;
   color: var(--tinta);
   background: var(--noite);
   -webkit-font-smoothing: antialiased;
@@ -50,8 +60,12 @@ h1, h2, h3, h4 {
   font-family: var(--display);
   font-weight: 700;
   line-height: 1.04;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.024em;
   margin: 0;
+  /* Reparte as linhas do titulo em larguras parecidas em vez de deixar uma
+     palavra solta na ultima -- e o que mais separa um titulo cuidado de um
+     titulo apenas grande. */
+  text-wrap: balance;
 }
 
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -61,8 +75,8 @@ a { color: inherit; }
 
 :focus-visible {
   outline: 2px solid var(--teal);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 .mono {
