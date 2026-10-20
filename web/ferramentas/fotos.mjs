@@ -23,6 +23,32 @@ const ENTRADA = path.join(RAIZ, 'fotos-entrada');
 const SAIDA = path.join(RAIZ, 'src/assets/fotos-reais');
 const LARGURA = 840, ALTURA = 525;          // 8:5, o formato do cartao
 
+// Foto de catalogo vem recortada em fundo branco e quase nunca na proporcao do
+// cartao. Cortar no 'cover' uma dessas decepa teto ou para-choque; o certo e
+// encaixar inteira e completar com o mesmo branco. Foto de rua, que ocupa o
+// quadro todo, continua no 'cover'. A diferenca entre as duas se ve nos cantos.
+async function ehCatalogo(entrada) {
+  // Le os pixels crus. Cuidado: sharp.stats() mede a imagem de ENTRADA e
+  // ignora um .extract() do pipeline, entao amostrar canto por extract devolve
+  // a media da imagem inteira -- quatro cantos identicos, deteccao sempre
+  // errada. Com .raw() a leitura e do pixel mesmo.
+  const { data, info } = await sharp(entrada).raw().toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const pixel = (x, y) => {
+    const i = (y * width + x) * channels;
+    return [data[i], data[i + 1], data[i + 2]];
+  };
+  const m = Math.max(2, Math.round(Math.min(width, height) * 0.02));
+  const cantos = [[m, m], [width - 1 - m, m], [m, height - 1 - m], [width - 1 - m, height - 1 - m]];
+  for (const [x, y] of cantos) {
+    const rgb = pixel(x, y);
+    if (Math.min(...rgb) < 240) return false;                 // claro
+    if (Math.max(...rgb) - Math.min(...rgb) > 10) return false; // sem cor
+  }
+  return true;
+}
+
+
 let sharp;
 try {
   sharp = (await import('sharp')).default;
@@ -102,14 +128,20 @@ for (const f of arquivos) {
     continue;
   }
   const destino = path.join(SAIDA, `${v.id}.webp`);
+  const origem = path.join(ENTRADA, f);
   try {
-    await sharp(path.join(ENTRADA, f))
+    const catalogo = await ehCatalogo(origem);
+    const encaixe = catalogo
+      ? { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } }
+      : { fit: 'cover', position: 'centre' };
+    await sharp(origem)
       .rotate()                                   // respeita o EXIF da camera
-      .resize(LARGURA, ALTURA, { fit: 'cover', position: 'centre' })
-      .webp({ quality: 80 })
+      .resize(LARGURA, ALTURA, encaixe)
+      .flatten({ background: '#ffffff' })         // PNG transparente vira branco
+      .webp({ quality: 82 })
       .toFile(destino);
     encaixados.set(v.id, f);
-    console.log(`  ok  ${f}  ->  ${v.id}.webp  (${v.modelo})`);
+    console.log(`  ok  ${f}  ->  ${v.id}.webp  (${v.modelo})  [${catalogo ? 'catalogo, encaixada inteira' : 'foto, cortada em 8:5'}]`);
   } catch (e) {
     console.error(`  ERRO ${f}: ${e.message}`);
   }
