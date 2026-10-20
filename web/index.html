@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" style="background:#000">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -8,8 +8,12 @@
 <meta name="theme-color" content="#0a1424" />
 <link rel="icon" href="./marca.svg" type="image/svg+xml" />
 </head>
-<body>
+<body style="background:#000">
 <div id="raiz"></div>
+<!-- O fundo preto vai inline no html e no body de proposito: a folha de
+     estilo e um arquivo separado, e sem isto a pagina pinta branco por um
+     instante antes de o CSS chegar. Numa abertura que comeca no escuro, esse
+     flash branco e a primeira coisa que a pessoa ve. -->
 <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

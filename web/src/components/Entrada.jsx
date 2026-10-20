@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import carroUrl from '../assets/entrada/carro.webp';
 import farolUrl from '../assets/entrada/farol.webp';
-import { ARCO } from './Marca';
 import { faixa, suave, REDUZIDO } from '../lib/util';
 import { inscrever } from '../lib/mola';
 
@@ -43,10 +42,26 @@ export default function Entrada({ aoProgredir }) {
     return () => { vivo = false; };
   }, []);
 
-  // A abertura: relogio proprio, uma passagem so.
+  // A abertura: relogio proprio. Toca ao carregar e toca DE NOVO toda vez que
+  // a pessoa volta ao topo -- antes era uma chance so, e quem piscasse ou
+  // chegasse rolando nunca mais via.
+  const [tomada, setTomada] = useState(0);
+  useEffect(() => {
+    if (!pronto) return;
+    let noTopo = true;
+    const olhar = () => {
+      const topo = scrollY < 40;
+      if (topo && !noTopo) setTomada((n) => n + 1);
+      noTopo = topo;
+    };
+    addEventListener('scroll', olhar, { passive: true });
+    return () => removeEventListener('scroll', olhar);
+  }, [pronto]);
+
   useEffect(() => {
     const o = palco.current;
     if (!o || !pronto) return;
+    o.classList.remove('fim');
 
     const por = (t, [a, b]) => suave(faixa(t, a, b));
     const aplicar = (t) => {
@@ -70,7 +85,7 @@ export default function Entrada({ aoProgredir }) {
       if (t >= FIM) { o.classList.add('fim'); soltar(); }
     });
     return soltar;
-  }, [pronto]);
+  }, [pronto, tomada]);
 
   // A rolagem nao conduz mais a abertura; so leva a pagina da noite para o dia
   // ao sair dela.
@@ -146,19 +161,15 @@ export default function Entrada({ aoProgredir }) {
             </p>
           </div>
 
-          <div className="hero-dica" aria-hidden="true">
-            <svg className="hero-dica-rel" viewBox="0 0 48 48" width="56" height="56"
-                 fill="none" strokeLinecap="round">
-              <path className="hdr-trilho" d={ARCO} strokeWidth="3.4" />
-              <g className="hdr-agulha"><path d="M23 26.6 L23 12.4" strokeWidth="3.2" /></g>
-              <circle className="hdr-miolo" cx="23" cy="26.6" r="3.1" />
+          {/* So a seta. O texto "role para baixo" e o mostrador faziam a
+              abertura parecer comandada pela rolagem, que e justamente o que
+              ela nao e. */}
+          <span className="entrada-seta" aria-hidden="true">
+            <svg viewBox="0 0 28 16" width="26" height="15" fill="none"
+                 stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+              <path d="M3 3.5l11 9 11-9" />
             </svg>
-            <span className="hero-dica-texto">Role para baixo</span>
-            <svg className="hero-dica-seta" viewBox="0 0 24 14" width="22" height="13"
-                 fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
-              <path d="M3 3l9 8 9-8" />
-            </svg>
-          </div>
+          </span>
         </div>
       </div>
     </section>
