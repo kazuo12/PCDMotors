@@ -16,128 +16,151 @@ body {
 }
 
 /* ===========================================================================
-   ENTRADA -- o farol acende no escuro
+   ENTRADA -- o farol acende no escuro e revela o carro
    ===========================================================================
-   Regra do bloco: TUDO comeca invisivel sobre preto. A unica coisa que se
-   move por conta propria e o pisca do farol; o resto e a rolagem.
+   Toca sozinha ao abrir o site. Nao depende de rolagem.
+   Comeca em preto de verdade: o carro nao esta ali escurecido, ele esta
+   mascarado a raio zero. O que o revela e a propria luz do farol crescendo.
    =========================================================================== */
-.entrada { position: relative; height: 300vh; }
+.entrada { position: relative; height: 100vh; height: 100svh; }
 .entrada-fixo {
-  position: sticky; top: 0; height: 100vh; height: 100svh;
-  overflow: hidden; background: #04070d;
+  position: absolute; inset: 0; overflow: hidden;
+  background: #000;
 }
 .entrada-palco {
   position: absolute; inset: 0;
   display: grid; place-items: center;
-  --brilho: 0; --aprox: 1; --assin: 0; --dica: 1; --volta: 0; --veu: 0;
+  --acende: 0; --revela: 0; --assin: 0; --dica: 0;
 }
 
-.entrada-cena {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  transform: scale(var(--aprox));
-  transform-origin: 50% 56%;
-}
+.entrada-cena { position: absolute; inset: 0; display: grid; place-items: center; }
 
-/* O quadro carrega a proporcao da imagem, entao qualquer coisa posicionada
-   em % dentro dele cai no mesmo ponto do desenho em qualquer tela. */
+/* O quadro carrega a proporcao da imagem, entao qualquer coisa posicionada em
+   % dentro dele cai no mesmo ponto do desenho em qualquer tela. */
 .entrada-quadro {
   position: absolute; left: 50%; top: 54%;
-  width: min(118vw, 1340px); aspect-ratio: 1094 / 730;
+  width: min(122vw, 1420px); aspect-ratio: 1641 / 1095;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-/* O carro e a luz sao dois arquivos separados, sobrepostos no mesmo quadro.
-   Por isso o farol pode acender sozinho, sem clarear o carro todo junto. */
+/* A REVELACAO.
+   Duas mascaras circulares, uma em cada farol, com raio indo de zero ao
+   tamanho do carro. Raio zero = nada na tela. Por isso a abertura comeca no
+   preto total em vez de numa foto com brilho baixo, que e o que entrega
+   animacao feita por cima. */
 .entrada-carro, .entrada-luz {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  position: absolute; inset: 0; width: 100%; height: 100%;
 }
 .entrada-carro {
-  /* mal visivel com a luz apagada: a silhueta so se adivinha */
-  opacity: calc(.34 + var(--brilho) * .66);
-  filter: contrast(calc(1 + var(--brilho) * .18));
+  opacity: calc(.55 + var(--revela) * .45);
+  --m1: radial-gradient(circle at 29.73% 53.65%,
+        #000 calc(var(--revela) * 34%), transparent calc(var(--revela) * 72%));
+  --m2: radial-gradient(circle at 69.48% 53.52%,
+        #000 calc(var(--revela) * 34%), transparent calc(var(--revela) * 72%));
+  -webkit-mask-image: var(--m1), var(--m2);
+          mask-image: var(--m1), var(--m2);
+  -webkit-mask-composite: source-over;
+          mask-composite: add;
 }
 
-.entrada-luz { opacity: var(--brilho); }
-.entrada-luz img {
-  display: block; width: 100%; height: auto;
-  /* o halo e drop-shadow da propria forma da luz, entao ele nasce do farol
-     em vez de ser um circulo colado por cima */
-  filter: drop-shadow(0 0 14px rgba(190, 225, 255, .85))
-          drop-shadow(0 0 48px rgba(120, 180, 255, .55))
-          drop-shadow(0 0 120px rgba(80, 150, 255, .32));
-}
+/* A luz recortada da imagem entra junto, so para o farol ter desenho interno
+   (lente, friso, farol de milha). O brilho forte vem do CSS, logo abaixo. */
+.entrada-luz { opacity: calc(var(--acende) * .95); }
+.entrada-luz img { display: block; width: 100%; height: auto; }
 
-/* Ignicao: dois golpes, hesita, firma. Lampada de verdade nao sobe em rampa. */
-.entrada-fixo.acesa .entrada-luz img { animation: ignicao 1.9s steps(1, end) both; }
+/* Ignicao: dois golpes, hesita, firma. Lampada de verdade nao sobe em rampa.
+   Multiplica o --acende do roteiro, entao os dois tempos nao brigam. */
+.entrada-fixo.acesa .entrada-luz,
+.entrada-fixo.acesa .ent-flare { animation: ignicao 1.1s steps(1, end) both; }
 @keyframes ignicao {
-  0%, 7%    { opacity: 0; }
-  8%, 11%   { opacity: .85; }
-  12%, 17%  { opacity: .04; }
-  18%, 23%  { opacity: 1; }
-  24%, 27%  { opacity: .18; }
-  28%, 36%  { opacity: .78; }
-  37%, 43%  { opacity: .52; }
-  44%, 100% { opacity: 1; }
+  0%, 12%   { opacity: 0; }
+  13%, 20%  { opacity: .9; }
+  21%, 30%  { opacity: .05; }
+  31%, 40%  { opacity: 1; }
+  41%, 46%  { opacity: .2; }
+  47%, 60%  { opacity: .8; }
+  61%, 68%  { opacity: .55; }
+  69%, 100% { opacity: 1; }
 }
 
-/* Feixe: nasce no centro exato de cada farol, medido na imagem. */
-.entrada-feixe {
-  position: absolute; width: 1px; height: 1px; pointer-events: none;
-  opacity: calc(var(--brilho) * .9);
-  box-shadow:
-    0 0 60px 26px rgba(176, 214, 255, .30),
-    0 0 160px 70px rgba(120, 175, 255, .18),
-    0 0 340px 150px rgba(70, 130, 220, .10);
+/* ---- brilho do farol, desenhado -----------------------------------------
+   Desenhar em vez de recortar da imagem: nucleo, estrela e risco horizontal
+   ficam nitidos em qualquer tela, e e exatamente onde o olho vai primeiro. */
+.ent-flare {
+  position: absolute; width: 0; height: 0; pointer-events: none;
+  opacity: calc(.25 + var(--revela) * .75);
 }
+.ent-flare i { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: block; }
+
+.ent-nucleo {
+  width: 7.5vw; height: 7.5vw; max-width: 104px; max-height: 104px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    #fff 0%, rgba(226, 242, 255, .96) 14%, rgba(150, 200, 255, .62) 34%,
+    rgba(88, 150, 230, .26) 56%, transparent 74%);
+  filter: blur(calc(2px + var(--revela) * 2px));
+}
+/* Halo largo: e ele que "pinta" o ambiente em volta do carro. */
+.ent-estrela {
+  width: 46vw; height: 46vw; max-width: 620px; max-height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(188, 222, 255, .34) 0%, rgba(120, 178, 250, .16) 26%,
+    rgba(60, 120, 210, .07) 48%, transparent 70%);
+  filter: blur(12px);
+  opacity: calc(.35 + var(--revela) * .65);
+}
+/* Risco horizontal anamorfico: a assinatura de farol forte a noite. */
+.ent-risco {
+  width: 64vw; height: 2px; max-width: 900px;
+  background: linear-gradient(90deg,
+    transparent, rgba(150, 200, 255, .5) 22%, rgba(236, 248, 255, .95) 50%,
+    rgba(150, 200, 255, .5) 78%, transparent);
+  filter: blur(1.4px);
+  transform: translate(-50%, -50%) scaleX(calc(.35 + var(--revela) * .65));
+  opacity: calc(var(--revela) * .9);
+}
+
 /* Poca de luz no chao, elipse larga e baixa. */
 .entrada-chao {
   position: absolute; left: 50%; top: 74%;
-  width: min(96vw, 1100px); height: 16vh;
+  width: min(96vw, 1180px); height: 17vh;
   transform: translate(-50%, -50%);
   background: radial-gradient(50% 50% at 50% 50%,
     rgba(150, 195, 255, .20), rgba(80, 140, 220, .07) 55%, transparent 72%);
-  filter: blur(22px);
-  opacity: var(--brilho);
+  filter: blur(26px);
+  opacity: calc(var(--revela) * .9);
   pointer-events: none;
 }
 
-/* Poeira no ar: sem isto o feixe nao tem em que se apoiar e a luz fica chapada. */
-.entrada-ar {
-  position: absolute; left: 50%; top: 56%;
-  width: 150vw; height: 46vh; transform: translate(-50%, -50%);
-  background: radial-gradient(60% 50% at 50% 50%,
-    rgba(120, 170, 240, .10), transparent 70%);
-  filter: blur(40px);
-  opacity: calc(var(--brilho) * .85);
-  pointer-events: none;
-}
-
+/* A imagem e um retangulo e o fundo dela nao e preto puro; a vinheta apaga a
+   borda e fecha o olhar no carro. */
 .entrada-vinheta {
   position: absolute; inset: -2px; pointer-events: none;
-  background:
-    radial-gradient(118% 92% at 50% 54%,
-      transparent 28%, rgba(4, 7, 13, .50) 54%, rgba(4, 7, 13, .95) 76%, #04070d 90%);
+  background: radial-gradient(118% 92% at 50% 54%,
+    transparent 26%, rgba(0, 0, 0, .55) 52%, rgba(0, 0, 0, .96) 76%, #000 90%);
 }
 
-/* Veu que cresce junto com o nome. Radial e nao retangular para nao desenhar
-   uma faixa por cima do carro. */
-.entrada-veu {
-  position: absolute; left: 50%; top: 50%;
-  width: 150vw; height: 62vh; transform: translate(-50%, -50%);
-  background: radial-gradient(54% 60% at 50% 50%,
-    rgba(3, 6, 12, .96), rgba(3, 6, 12, .62) 55%, transparent 78%);
-  opacity: var(--veu);
-  pointer-events: none;
+/* Veu por tras do nome. Preso AO TEXTO, nao ao centro da tela: centrado na
+   tela ele caia justamente sobre os farois e apagava a unica coisa que a
+   abertura tem para mostrar. E fraco de proposito -- a legibilidade vem da
+   sombra da propria letra. */
+.entrada-nome::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 128%; height: 230%; transform: translate(-50%, -50%);
+  background: radial-gradient(52% 50% at 50% 50%,
+    rgba(0, 0, 0, .72), rgba(0, 0, 0, .34) 58%, transparent 80%);
+  opacity: var(--l4, 0);
+  pointer-events: none; z-index: -1;
 }
 
 .entrada-marca {
   position: relative; display: grid; justify-items: center; gap: 22px;
-  padding: 0 20px; margin-top: 34vh;
+  padding: 0 20px; margin-top: 30vh;
 }
 .entrada-nome {
+  position: relative;
   display: flex; flex-wrap: nowrap; margin: 0;
   font-size: clamp(38px, 11.2vw, 156px);
   font-weight: 800; letter-spacing: -.045em;
@@ -148,7 +171,6 @@ body {
   opacity: var(--op, 0);
   transform: translate3d(0, calc((1 - var(--op, 0)) * .30em), 0);
   filter: blur(calc((1 - var(--op, 0)) * 9px));
-  /* luz vindo de baixo, do farol: a base da letra acende antes do topo */
   text-shadow: 0 calc(var(--op, 0) * 14px) calc(var(--op, 0) * 46px) rgba(120, 180, 255, .30);
 }
 .entrada-nome .vao { display: inline-block; width: .26em; }
@@ -165,9 +187,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Sem pisca: a luz ja entra firme. */
-  .entrada-fixo.acesa .entrada-luz img { animation: none; }
-  .entrada-palco { --brilho: 1; }
+  .entrada-fixo.acesa .entrada-luz,
+  .entrada-fixo.acesa .ent-flare { animation: none; }
 }
 
 .hero-dica {

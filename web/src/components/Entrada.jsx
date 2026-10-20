@@ -3,30 +3,36 @@ import carroUrl from '../assets/entrada/carro.webp';
 import farolUrl from '../assets/entrada/farol.webp';
 import { ARCO } from './Marca';
 import { faixa, suave, REDUZIDO } from '../lib/util';
+import { inscrever } from '../lib/mola';
 
 const LETRAS = [...'PCD MOTORS'];
 
-// Posicao dos farois, medida nos pixels da propria imagem (centroide de cada
-// grupo de pixels acima do limiar de brilho). E daqui que saem os feixes e o
-// clarao no chao -- chutar no olho deixa a luz fora do farol.
+// Centro de cada farol, medido nos pixels da imagem (centroide dos pixels
+// acima do limiar de brilho). E daqui que a luz nasce e e daqui que o carro
+// e revelado -- chutar no olho poe a luz fora do farol.
 const FAROL = { e: { x: 29.73, y: 53.65 }, d: { x: 69.48, y: 53.52 } };
 
-// A entrada tem dois tempos:
-//   1. ignicao, por relogio: o farol pisca e firma sozinho assim que carrega,
-//      sem depender de a pessoa rolar;
-//   2. o resto, pela rolagem: a luz cresce, o carro se aproxima e o nome
-//      aparece.
-// Misturar os dois no mesmo valor daria briga, entao a opacidade final da luz
-// e o PRODUTO de duas camadas aninhadas -- o pisca na de dentro, a rolagem na
-// de fora.
+// Roteiro da abertura, em segundos. Toca sozinho ao abrir o site: nao depende
+// de rolagem nenhuma.
+const T = {
+  escuro: [0.00, 0.35],   // preto total, nada na tela
+  ignicao: [0.35, 1.45],  // o farol estala, hesita e firma
+  revela: [1.10, 2.90],   // a luz se abre e o carro aparece onde ela chega
+  nome: [2.45, 3.55],
+  assin: [3.35, 4.20],
+  dica: [4.10, 4.80],
+};
+const FIM = 4.8;
+
 export default function Entrada({ aoProgredir }) {
   const secao = useRef(null);
   const palco = useRef(null);
   const [pronto, setPronto] = useState(false);
 
+  // Espera as duas imagens decodificarem antes de comecar: se a animacao roda
+  // sem elas, a luz acende sobre nada e o carro aparece depois, fora do tempo.
   useEffect(() => {
-    let vivo = true;
-    let faltam = 2;
+    let vivo = true, faltam = 2;
     const chegou = () => { if (vivo && --faltam === 0) setPronto(true); };
     for (const src of [carroUrl, farolUrl]) {
       const img = new Image();
@@ -37,44 +43,48 @@ export default function Entrada({ aoProgredir }) {
     return () => { vivo = false; };
   }, []);
 
+  // A abertura: relogio proprio, uma passagem so.
   useEffect(() => {
-    const sec = secao.current;
     const o = palco.current;
-    if (!sec || !o) return;
+    if (!o || !pronto) return;
 
-    const progresso = () => {
-      const alcance = sec.offsetHeight - innerHeight;
-      if (alcance <= 0) return 0;
-      return Math.max(0, Math.min(1, -sec.getBoundingClientRect().top / alcance));
+    const por = (t, [a, b]) => suave(faixa(t, a, b));
+    const aplicar = (t) => {
+      o.style.setProperty('--acende', por(t, T.ignicao).toFixed(3));
+      o.style.setProperty('--revela', por(t, T.revela).toFixed(3));
+      o.style.setProperty('--assin', por(t, T.assin).toFixed(3));
+      o.style.setProperty('--dica', por(t, T.dica).toFixed(3));
+      for (let i = 0; i < LETRAS.length; i++) {
+        const atraso = i * 0.055;
+        o.style.setProperty(`--l${i}`,
+          por(t, [T.nome[0] + atraso, T.nome[1] + atraso]).toFixed(3));
+      }
     };
 
+    if (REDUZIDO) { aplicar(FIM); o.classList.add('fim'); return; }
+
+    let t = 0;
+    const soltar = inscrever((dt) => {
+      t += dt;
+      aplicar(Math.min(t, FIM));
+      if (t >= FIM) { o.classList.add('fim'); soltar(); }
+    });
+    return soltar;
+  }, [pronto]);
+
+  // A rolagem nao conduz mais a abertura; so leva a pagina da noite para o dia
+  // ao sair dela.
+  useEffect(() => {
+    const sec = secao.current;
+    if (!sec) return;
     let pedido = 0;
-    function pintar() {
+    const pintar = () => {
       pedido = 0;
-      const p = progresso();
-
-      // A luz sobe ao talo e depois RECUA quando o nome entra. Deixar os dois
-      // no brilho maximo faz as letras disputarem com o farol bem atras delas;
-      // o farol abrir caminho para o nome e a passagem de bastao da abertura.
-      const acende = suave(faixa(p, 0, 0.34));
-      const recua = suave(faixa(p, 0.36, 0.58));
-      o.style.setProperty('--brilho', (0.62 + acende * 0.38 - recua * 0.30).toFixed(3));
-      // Veu por tras do nome: garante contraste onde o farol e mais forte.
-      o.style.setProperty('--veu', (suave(faixa(p, 0.33, 0.55)) * 0.74).toFixed(3));
-      // O carro vem na direcao de quem olha, de leve. Exagerar aqui e o que
-      // faz uma abertura parecer efeito de template.
-      o.style.setProperty('--aprox', (1 + suave(faixa(p, 0.04, 0.56)) * 0.14).toFixed(4));
-      o.style.setProperty('--assin', suave(faixa(p, 0.60, 0.74)).toFixed(3));
-      o.style.setProperty('--dica', (1 - suave(faixa(p, 0.30, 0.52))).toFixed(3));
-      o.style.setProperty('--volta', faixa(p, 0, 0.74).toFixed(4));
-      for (let i = 0; i < LETRAS.length; i++) {
-        o.style.setProperty(`--l${i}`, suave(faixa(p, 0.36 + i * 0.012, 0.50 + i * 0.012)).toFixed(3));
-      }
-      // A pagina inteira atravessa da noite para o papel na saida da entrada.
-      document.documentElement.style.setProperty('--dia', suave(faixa(p, 0.72, 0.96)).toFixed(3));
+      const alcance = innerHeight;
+      const p = Math.max(0, Math.min(1, -sec.getBoundingClientRect().top / alcance));
+      document.documentElement.style.setProperty('--dia', suave(faixa(p, 0.08, 0.72)).toFixed(3));
       aoProgredir?.(p);
-    }
-
+    };
     const agendar = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
     pintar();
     addEventListener('scroll', agendar, { passive: true });
@@ -86,7 +96,17 @@ export default function Entrada({ aoProgredir }) {
     };
   }, [aoProgredir]);
 
-  const posicao = (f) => ({ left: `${f.x}%`, top: `${f.y}%` });
+  // Brilho do farol desenhado em CSS, nao recortado da imagem: nucleo, estrela
+  // e risco horizontal ficam nitidos em qualquer tela, e e justamente a parte
+  // que o olho procura.
+  const flare = (f, lado) => (
+    <span className={'ent-flare ent-flare-' + lado} key={lado}
+          style={{ left: `${f.x}%`, top: `${f.y}%` }}>
+      <i className="ent-nucleo" />
+      <i className="ent-estrela" />
+      <i className="ent-risco" />
+    </span>
+  );
 
   return (
     <section className="entrada" ref={secao} aria-label="Abertura">
@@ -94,29 +114,21 @@ export default function Entrada({ aoProgredir }) {
         <div className="entrada-palco" ref={palco}>
 
           <div className="entrada-cena" aria-hidden="true">
-            {/* poeira no ar, so para o feixe ter em que se apoiar */}
-            <span className="entrada-ar" />
-            {/* O quadro tem a medida exata da imagem. Os feixes sao
-                posicionados em % DELE, nao da tela -- em % da tela a luz
-                sairia de um ponto qualquer, longe do farol. */}
             <div className="entrada-quadro">
-              <img className="entrada-carro" src={carroUrl} alt="" width="1094" height="730" />
-              {/* a luz e uma camada propria: e ela que acende */}
+              {/* O carro e mascarado por dois circulos que crescem a partir
+                  dos farois. Enquanto o raio e zero nao ha carro nenhum na
+                  tela -- o preto e preto de verdade, nao foto escurecida. */}
+              <img className="entrada-carro" src={carroUrl} alt=""
+                   width="1641" height="1095" />
               <span className="entrada-luz">
-                <img src={farolUrl} alt="" width="1094" height="730" />
+                <img src={farolUrl} alt="" width="1641" height="1095" />
               </span>
-              <span className="entrada-feixe" style={posicao(FAROL.e)} />
-              <span className="entrada-feixe" style={posicao(FAROL.d)} />
+              {flare(FAROL.e, 'e')}
+              {flare(FAROL.d, 'd')}
             </div>
             <span className="entrada-chao" />
-            {/* A imagem e um retangulo e o fundo dela nao e preto puro, entao
-                a borda dela aparecia como um retangulo mais claro sobre a
-                pagina. A vinheta apaga isso e de quebra fecha o olhar no
-                carro. */}
             <span className="entrada-vinheta" />
           </div>
-
-          <span className="entrada-veu" aria-hidden="true" />
 
           <div className="entrada-marca">
             <h1 className="entrada-nome">
@@ -135,10 +147,9 @@ export default function Entrada({ aoProgredir }) {
           </div>
 
           <div className="hero-dica" aria-hidden="true">
-            <svg className="hero-dica-rel" viewBox="0 0 48 48" width="68" height="68"
+            <svg className="hero-dica-rel" viewBox="0 0 48 48" width="56" height="56"
                  fill="none" strokeLinecap="round">
               <path className="hdr-trilho" d={ARCO} strokeWidth="3.4" />
-              <path className="hdr-volta" d={ARCO} strokeWidth="3.4" pathLength="100" />
               <g className="hdr-agulha"><path d="M23 26.6 L23 12.4" strokeWidth="3.2" /></g>
               <circle className="hdr-miolo" cx="23" cy="26.6" r="3.1" />
             </svg>
