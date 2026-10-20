@@ -5,7 +5,7 @@ import Comparar from './components/Comparar';
 import Detalhe from './components/Detalhe';
 import Entrar from './components/Entrar';
 import Filtros from './components/Filtros';
-import Hero from './components/Hero';
+import Entrada from './components/Entrada';
 import Icone from './components/Icone';
 import Simulador from './components/Simulador';
 import Vitrine from './components/Vitrine';
@@ -130,7 +130,7 @@ export default function App() {
         aoSair={() => { setConta(null); setAlerta(false); }}
       />
 
-      <Hero aoProgredir={setProgresso} />
+      <Entrada aoProgredir={setProgresso} />
 
       {/* Tudo daqui para baixo divide um fundo so. Nenhum bloco tem cor
           propria -- e por isso que a rolagem parece um movimento unico. */}

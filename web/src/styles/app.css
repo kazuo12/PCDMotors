@@ -15,28 +15,159 @@ body {
       color-mix(in oklab, var(--papel) calc(var(--dia) * 100%), var(--noite)) 100%);
 }
 
-/* ---------- HERO ---------- */
-.hero { position: relative; height: 420vh; }
-.hero-fixo {
+/* ===========================================================================
+   ENTRADA -- o farol acende no escuro
+   ===========================================================================
+   Regra do bloco: TUDO comeca invisivel sobre preto. A unica coisa que se
+   move por conta propria e o pisca do farol; o resto e a rolagem.
+   =========================================================================== */
+.entrada { position: relative; height: 300vh; }
+.entrada-fixo {
   position: sticky; top: 0; height: 100vh; height: 100svh;
-  overflow: hidden; background: var(--noite);
+  overflow: hidden; background: #04070d;
 }
-.hero-tela { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-.hero-palco {
+.entrada-palco {
   position: absolute; inset: 0;
   display: grid; place-items: center;
-  --veu: 0; --selo: 0; --assin: 0; --dica: 1;
+  --brilho: 0; --aprox: 1; --assin: 0; --dica: 1; --volta: 0; --veu: 0;
 }
 
-/* Veu duplo: a radial sozinha deixava o centro limpo, e era exatamente onde
-   o carro branco estava -- o wordmark branco sumia dentro dele. */
-.hero-veu {
-  position: absolute; inset: 0; pointer-events: none;
-  opacity: var(--veu);
+.entrada-cena {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  transform: scale(var(--aprox));
+  transform-origin: 50% 56%;
+}
+
+/* O quadro carrega a proporcao da imagem, entao qualquer coisa posicionada
+   em % dentro dele cai no mesmo ponto do desenho em qualquer tela. */
+.entrada-quadro {
+  position: absolute; left: 50%; top: 54%;
+  width: min(118vw, 1340px); aspect-ratio: 1094 / 730;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* O carro e a luz sao dois arquivos separados, sobrepostos no mesmo quadro.
+   Por isso o farol pode acender sozinho, sem clarear o carro todo junto. */
+.entrada-carro, .entrada-luz {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.entrada-carro {
+  /* mal visivel com a luz apagada: a silhueta so se adivinha */
+  opacity: calc(.34 + var(--brilho) * .66);
+  filter: contrast(calc(1 + var(--brilho) * .18));
+}
+
+.entrada-luz { opacity: var(--brilho); }
+.entrada-luz img {
+  display: block; width: 100%; height: auto;
+  /* o halo e drop-shadow da propria forma da luz, entao ele nasce do farol
+     em vez de ser um circulo colado por cima */
+  filter: drop-shadow(0 0 14px rgba(190, 225, 255, .85))
+          drop-shadow(0 0 48px rgba(120, 180, 255, .55))
+          drop-shadow(0 0 120px rgba(80, 150, 255, .32));
+}
+
+/* Ignicao: dois golpes, hesita, firma. Lampada de verdade nao sobe em rampa. */
+.entrada-fixo.acesa .entrada-luz img { animation: ignicao 1.9s steps(1, end) both; }
+@keyframes ignicao {
+  0%, 7%    { opacity: 0; }
+  8%, 11%   { opacity: .85; }
+  12%, 17%  { opacity: .04; }
+  18%, 23%  { opacity: 1; }
+  24%, 27%  { opacity: .18; }
+  28%, 36%  { opacity: .78; }
+  37%, 43%  { opacity: .52; }
+  44%, 100% { opacity: 1; }
+}
+
+/* Feixe: nasce no centro exato de cada farol, medido na imagem. */
+.entrada-feixe {
+  position: absolute; width: 1px; height: 1px; pointer-events: none;
+  opacity: calc(var(--brilho) * .9);
+  box-shadow:
+    0 0 60px 26px rgba(176, 214, 255, .30),
+    0 0 160px 70px rgba(120, 175, 255, .18),
+    0 0 340px 150px rgba(70, 130, 220, .10);
+}
+/* Poca de luz no chao, elipse larga e baixa. */
+.entrada-chao {
+  position: absolute; left: 50%; top: 74%;
+  width: min(96vw, 1100px); height: 16vh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(50% 50% at 50% 50%,
+    rgba(150, 195, 255, .20), rgba(80, 140, 220, .07) 55%, transparent 72%);
+  filter: blur(22px);
+  opacity: var(--brilho);
+  pointer-events: none;
+}
+
+/* Poeira no ar: sem isto o feixe nao tem em que se apoiar e a luz fica chapada. */
+.entrada-ar {
+  position: absolute; left: 50%; top: 56%;
+  width: 150vw; height: 46vh; transform: translate(-50%, -50%);
+  background: radial-gradient(60% 50% at 50% 50%,
+    rgba(120, 170, 240, .10), transparent 70%);
+  filter: blur(40px);
+  opacity: calc(var(--brilho) * .85);
+  pointer-events: none;
+}
+
+.entrada-vinheta {
+  position: absolute; inset: -2px; pointer-events: none;
   background:
-    radial-gradient(120% 78% at 50% 62%, rgba(10,20,36,.30) 0%, rgba(10,20,36,.86) 72%),
-    linear-gradient(180deg, rgba(10,20,36,.55) 0%, rgba(10,20,36,.72) 55%, rgba(10,20,36,.92) 100%);
+    radial-gradient(118% 92% at 50% 54%,
+      transparent 28%, rgba(4, 7, 13, .50) 54%, rgba(4, 7, 13, .95) 76%, #04070d 90%);
+}
+
+/* Veu que cresce junto com o nome. Radial e nao retangular para nao desenhar
+   uma faixa por cima do carro. */
+.entrada-veu {
+  position: absolute; left: 50%; top: 50%;
+  width: 150vw; height: 62vh; transform: translate(-50%, -50%);
+  background: radial-gradient(54% 60% at 50% 50%,
+    rgba(3, 6, 12, .96), rgba(3, 6, 12, .62) 55%, transparent 78%);
+  opacity: var(--veu);
+  pointer-events: none;
+}
+
+.entrada-marca {
+  position: relative; display: grid; justify-items: center; gap: 22px;
+  padding: 0 20px; margin-top: 34vh;
+}
+.entrada-nome {
+  display: flex; flex-wrap: nowrap; margin: 0;
+  font-size: clamp(38px, 11.2vw, 156px);
+  font-weight: 800; letter-spacing: -.045em;
+  color: #eef4ff;
+}
+.entrada-nome .letra {
+  display: inline-block;
+  opacity: var(--op, 0);
+  transform: translate3d(0, calc((1 - var(--op, 0)) * .30em), 0);
+  filter: blur(calc((1 - var(--op, 0)) * 9px));
+  /* luz vindo de baixo, do farol: a base da letra acende antes do topo */
+  text-shadow: 0 calc(var(--op, 0) * 14px) calc(var(--op, 0) * 46px) rgba(120, 180, 255, .30);
+}
+.entrada-nome .vao { display: inline-block; width: .26em; }
+
+.entrada-assin {
+  margin: 0; text-align: center; opacity: var(--assin);
+  transform: translate3d(0, calc((1 - var(--assin)) * 14px), 0);
+  font-size: clamp(15px, 2.1vw, 21px); color: #dbe6f5;
+  display: grid; gap: 8px;
+}
+.entrada-assin span {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--poeira);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sem pisca: a luz ja entra firme. */
+  .entrada-fixo.acesa .entrada-luz img { animation: none; }
+  .entrada-palco { --brilho: 1; }
 }
 
 .hero-dica {
@@ -82,57 +213,6 @@ body {
 @keyframes cutuca {
   0%, 62%, 100% { transform: translateY(0); opacity: .55; }
   32% { transform: translateY(5px); opacity: 1; }
-}
-
-.hero-marca { position: relative; display: grid; justify-items: center; gap: 20px; padding: 0 20px; }
-
-.hero-selo {
-  /* maior que o primeiro corte: ao lado de um wordmark gigante, 52px sumia */
-  color: var(--teal-claro);
-  opacity: var(--selo);
-  transform: scale(calc(.82 + var(--selo) * .18)) rotate(calc((1 - var(--selo)) * -22deg));
-}
-
-.hero-nome {
-  display: flex; flex-wrap: nowrap;
-  font-size: clamp(38px, 11.4vw, 158px);
-  font-weight: 800; letter-spacing: -0.045em;
-  color: var(--papel); margin: 0;
-}
-/* Cada letra tem a propria variavel, atualizada pelo scroll. O escalonamento
-   e por posicao, entao a palavra se monta da esquerda para a direita como se
-   alguem estivesse lendo junto. */
-.hero-nome .letra {
-  display: inline-block;
-  opacity: var(--op, 0);
-  transform: translate3d(0, calc((1 - var(--op, 0)) * 0.42em), 0)
-             rotate(calc((1 - var(--op, 0)) * 4deg));
-  filter: blur(calc((1 - var(--op, 0)) * 7px));
-}
-.hero-nome .vao { display: inline-block; width: .26em; }
-/* Cada <span> recebe `--op: var(--lN)` inline. Mapear por :nth-child era
-   fragil -- o span de leitor de tela conta como filho e desalinhava tudo. */
-
-.hero-assin {
-  margin: 0; text-align: center; opacity: var(--assin);
-  transform: translate3d(0, calc((1 - var(--assin)) * 14px), 0);
-  font-size: clamp(15px, 2.1vw, 21px); color: var(--papel);
-  display: grid; gap: 8px;
-}
-.hero-assin span {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
-  text-transform: uppercase; color: var(--poeira);
-}
-
-.hero-carga {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-  background: rgba(242,244,247,.12);
-  transition: opacity .5s ease .2s;
-}
-.hero-carga.pronto { opacity: 0; }
-.hero-carga i {
-  display: block; height: 100%; background: var(--teal-claro);
-  transition: width .18s linear;
 }
 
 /* ---------- TOPO ---------- */
